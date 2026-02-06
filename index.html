@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chúc Tết 2026 - Thầy Nguyễn Thiện Chí</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --red-tet: #d32f2f;
@@ -16,7 +19,8 @@
             margin: 0;
             padding: 0;
             font-family: 'Quicksand', sans-serif;
-            background: #8b0000; /* Màu đỏ nền truyền thống */
+            background: #8b0000;
+            /* Màu đỏ nền truyền thống */
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
@@ -46,14 +50,46 @@
             animation: swing 3s ease-in-out infinite;
             transform-origin: top center;
         }
-        .lantern:before { content: ""; position: absolute; top: -10px; left: 22px; width: 4px; height: 10px; background: var(--gold-tet); }
-        .lantern:after { content: ""; position: absolute; bottom: -15px; left: 22px; width: 4px; height: 15px; background: var(--gold-tet); }
-        .lantern.left { left: 10%; }
-        .lantern.right { right: 10%; animation-delay: 1s; }
+
+        .lantern:before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 22px;
+            width: 4px;
+            height: 10px;
+            background: var(--gold-tet);
+        }
+
+        .lantern:after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 22px;
+            width: 4px;
+            height: 15px;
+            background: var(--gold-tet);
+        }
+
+        .lantern.left {
+            left: 10%;
+        }
+
+        .lantern.right {
+            right: 10%;
+            animation-delay: 1s;
+        }
 
         @keyframes swing {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
+
+            0%,
+            100% {
+                transform: rotate(-5deg);
+            }
+
+            50% {
+                transform: rotate(5deg);
+            }
         }
 
         .main-content {
@@ -72,7 +108,7 @@
             font-family: 'Dancing Script', cursive;
             font-size: 2.8rem;
             color: var(--gold-tet);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5), 0 0 20px var(--gold-tet);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px var(--gold-tet);
             margin-bottom: 30px;
         }
 
@@ -86,29 +122,40 @@
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             transition: 0.3s;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(255, 215, 0, 0);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         /* Khung quẻ may mắn */
         .card {
             display: none;
             margin-top: 25px;
-            background: #fff8e1; /* Màu giấy cũ */
+            background: #fff8e1;
+            /* Màu giấy cũ */
             border: 8px double var(--dark-red);
             padding: 25px;
             width: 90%;
             max-width: 400px;
             border-radius: 5px;
             color: #333;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
             position: relative;
         }
 
@@ -151,12 +198,22 @@
 
         /* Mobile Responsive */
         @media (max-width: 480px) {
-            .title { font-size: 2.2rem; }
-            .btn-lixi { padding: 12px 25px; font-size: 1rem; }
-            .card { width: 85%; }
+            .title {
+                font-size: 2.2rem;
+            }
+
+            .btn-lixi {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+
+            .card {
+                width: 85%;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <canvas id="flowerCanvas"></canvas>
@@ -165,7 +222,7 @@
 
     <div class="main-content">
         <div class="title">Chúc Mừng Năm Mới 2026</div>
-        
+
         <button class="btn-lixi" onclick="xemQue()">🧧 MỞ LỘC ĐẦU XUÂN 🧧</button>
 
         <div class="card" id="ketqua">
@@ -175,7 +232,8 @@
     </div>
 
     <div class="footer">
-        <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8" alt="Thầy Chí">
+        <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8"
+            alt="Thầy Chí">
         <div>
             <div style="font-weight: bold;">Thầy Nguyễn Thiện Chí</div>
             <div style="font-size: 0.8rem; opacity: 0.8;">Chúc các Trò vạn sự như ý</div>
@@ -207,7 +265,7 @@
 
             document.getElementById('txtWish').innerText = w;
             document.getElementById('txtOracle').innerText = o;
-            
+
             card.style.display = 'block';
             card.style.animation = 'fadeInUp 0.8s ease forwards';
         }
@@ -239,14 +297,14 @@
                 ctx.rotate(this.angle * Math.PI / 180);
                 ctx.fillStyle = "#ffd700";
                 // Vẽ hoa mai 5 cánh đơn giản
-                for(let i=0; i<5; i++) {
+                for (let i = 0; i < 5; i++) {
                     ctx.rotate(72 * Math.PI / 180);
                     ctx.beginPath();
-                    ctx.ellipse(0, this.size/2, this.size/3, this.size/2, 0, 0, 2*Math.PI);
+                    ctx.ellipse(0, this.size / 2, this.size / 3, this.size / 2, 0, 0, 2 * Math.PI);
                     ctx.fill();
                 }
                 ctx.beginPath();
-                ctx.arc(0,0, this.size/4, 0, 2*Math.PI);
+                ctx.arc(0, 0, this.size / 4, 0, 2 * Math.PI);
                 ctx.fillStyle = "#ff9800";
                 ctx.fill();
                 ctx.restore();
@@ -254,14 +312,16 @@
             update() {
                 this.y += this.speed;
                 this.angle += this.spin;
-                if(this.y > canvas.height) {
+                if (this.y > canvas.height) {
                     this.y = -20;
                     this.x = Math.random() * canvas.width;
                 }
             }
         }
 
-        for(let i=0; i<30; i++) flowers.push(new Flower());
+        // sửa bình thường ở đây rồi commit lại là đc
+
+        for (let i = 0; i < 30; i++) flowers.push(new Flower());
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -276,9 +336,17 @@
 
     <style>
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </body>
+
 </html>
