@@ -96,6 +96,8 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            padding-bottom: 100px;
+            /* Tạo khoảng trống để không bị Footer đè lên lời chúc */
         }
 
         .btn-open-lixi {
@@ -179,22 +181,37 @@
 
         .footer-branding {
             position: relative;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 12px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            margin-bottom: 20px;
+            /* Đẩy footer lên trên một chút so với đáy */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            border-top: 2px solid var(--secondary);
+            gap: 15px;
+            border-top: 3px solid var(--secondary);
+            border-radius: 15px 15px 0 0;
+            /* Bo góc trên cho sang trọng */
+        }
+
+        .footer-branding a {
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-branding a:hover {
+            transform: scale(1.1);
+            /* Hiệu ứng phóng to khi chạm/di chuột */
         }
 
         .footer-branding img {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             border: 2px solid var(--secondary);
             object-fit: cover;
+            cursor: pointer;
         }
 
         @keyframes pulse {
@@ -250,17 +267,13 @@
     </main>
 
     <footer class="footer-branding">
-        <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8"
-            alt="Thầy Nguyễn Thiện Chí">
-
-        <div style="color: var(--secondary); text-align: left;">
-            <div style="font-weight: bold;">
-                <a href="https://www.facebook.com/goodwill288" target="_blank"
-                    style="color: var(--secondary); text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.3s ease;">
-                    Thầy Nguyễn Thiện Chí
-                </a>
-            </div>
-            <div style="font-size: 0.75rem; opacity: 0.9;">Chúc Trò vạn sự hanh thông!</div>
+        <a href="https://www.facebook.com/goodwill288" target="_blank" title="Ghé thăm Facebook Thầy Chí">
+            <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8"
+                alt="Thầy Nguyễn Thiện Chí">
+        </a>
+        <div style="color: var(--secondary)">
+            <div style="font-weight: bold; font-size: 1.1rem;">Thầy Nguyễn Thiện Chí</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">Chúc Trò vạn sự hanh thông!</div>
         </div>
     </footer>
 
