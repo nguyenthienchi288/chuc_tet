@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tết Bính Ngọ 2026 - Thầy Nguyễn Thiện Chí</title>
+    <title>Tết 2026 - Thầy Nguyễn Thiện Chí</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Noto+Serif+JP:wght@700&family=Noto+Serif+KR:wght@700&family=ZCOOL+XiaoWei&family=Quicksand:wght@400;600&display=swap"
         rel="stylesheet">
@@ -19,7 +19,7 @@
             --font-title: 'Dancing Script', cursive;
         }
 
-        /* Themes */
+        /* Themes Culture */
         [data-theme="vn"] {
             --primary: #b71c1c;
             --secondary: #ffeb3b;
@@ -100,40 +100,51 @@
         .btn-open-lixi {
             background: linear-gradient(135deg, var(--secondary), #f9a825);
             border: 2px solid var(--secondary);
-            padding: 18px 35px;
-            font-size: 1.3rem;
+            padding: 20px 40px;
+            font-size: 1.4rem;
             font-weight: bold;
             color: #8b0000;
             border-radius: 50px;
             cursor: pointer;
             font-family: var(--font-title);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             transition: 0.3s;
+            animation: pulse 2s infinite;
         }
 
-        .btn-open-lixi:active {
-            transform: scale(0.9);
+        @keyframes pulse {
+            0% {
+                transform: scale(1)
+            }
+
+            50% {
+                transform: scale(1.05)
+            }
+
+            100% {
+                transform: scale(1)
+            }
         }
 
         .wish-card {
             display: none;
             width: 100%;
             max-width: 450px;
-            margin-top: 20px;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.9);
+            margin-top: 10px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(10px);
-            border: 3px solid var(--secondary);
+            border: 4px double var(--secondary);
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            animation: slideUp 0.6s ease-out forwards;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(50px);
             }
 
             to {
@@ -144,60 +155,65 @@
 
         .header-greeting {
             font-family: var(--font-title);
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--primary);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
         }
 
         .wish-content {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #222;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-weight: 500;
-        }
-
-        .random-friend {
-            background: #fff3e0;
-            border: 1px dashed #e65100;
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            color: #e65100;
-            font-weight: bold;
+            line-height: 1.6;
         }
 
         .oracle-tag {
             display: inline-block;
-            padding: 8px 15px;
+            padding: 10px 20px;
             background: var(--accent);
             color: white;
-            border-radius: 8px;
+            border-radius: 10px;
             font-style: italic;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        /* Dòng yêu cầu gửi cho bạn - Đã dời xuống dưới */
+        .random-friend {
+            background: linear-gradient(to right, transparent, #fff3e0, transparent);
+            border-top: 1px dashed #e65100;
+            padding: 15px 10px;
+            color: #e65100;
+            font-weight: bold;
+            font-size: 1rem;
+            line-height: 1.4;
         }
 
         .footer-branding {
             position: relative;
             z-index: 10;
             background: rgba(0, 0, 0, 0.85);
-            padding: 12px;
+            padding: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 15px;
             border-top: 2px solid var(--secondary);
         }
 
         .footer-branding img {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             border: 2px solid var(--secondary);
+            object-fit: cover;
         }
 
         .teacher-info {
             color: var(--secondary);
-            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -208,29 +224,27 @@
     <canvas id="visualCanvas"></canvas>
 
     <main class="main-stage">
-        <button class="btn-open-lixi" id="btnMain" onclick="handleOpen()">🧧 KHAI XUÂN NHẬN LỘC 🧧</button>
+        <button class="btn-open-lixi" id="btnMain" onclick="handleOpen()">🧧 MỞ LỜI CHÚC NĂM MỚI 🧧</button>
 
         <div class="wish-card" id="wishCard">
             <div class="header-greeting" id="txtHeader"></div>
-            <div class="random-friend" id="txtFriend"></div>
             <div class="wish-content" id="txtWish"></div>
             <div class="oracle-tag" id="txtOracle"></div>
-            <button style="margin-top:20px; background:none; border:1px solid #ccc; border-radius:20px; cursor:pointer"
-                onclick="location.reload()">Làm mới trang</button>
+            <div class="random-friend" id="txtFriend"></div>
         </div>
     </main>
 
     <footer class="footer-branding">
-        <img
-            src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8">
+        <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8"
+            alt="Thầy Chí">
         <div class="teacher-info">
-            <div style="font-weight: bold;">Thầy Nguyễn Thiện Chí</div>
-            <div>Chúc Trò năm mới vạn sự hanh thông!</div>
+            <div style="font-weight: bold; font-size: 1.1rem;">Thầy Nguyễn Thiện Chí</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">Chúc Trò vạn sự hanh thông!</div>
         </div>
     </footer>
 
     <script>
-        // DANH SÁCH HỌC SINH THEO LỚP
+        // DANH SÁCH HỌC SINH ĐÃ KIỂM TRA LỖI CÚ PHÁP
         const students = [
             { n: "Nguyễn Trần Diệu Anh", l: "7E" }, { n: "Ngô Trâm Anh", l: "7E" }, { n: "Dương Hoàng Bách", l: "7E" }, { n: "Phan Lê Thái Bình", l: "7E" }, { n: "Lê Hiếu Đạt", l: "7E" }, { n: "La Quốc Đạt", l: "7E" }, { n: "Vũ Hải Đăng", l: "7E" }, { n: "Dương Ánh Dương", l: "7E" }, { n: "Phạm Hữu Duy", l: "7E" }, { n: "Phan Trần Quốc Kiệt", l: "7E" }, { n: "Nguyễn Hoàng Long", l: "7E" }, { n: "Nguyễn Tiến Minh", l: "7E" }, { n: "Nguyễn Tiểu Phát", l: "7E" }, { n: "Trần Nguyễn Hưng Phú", l: "7E" }, { n: "Nguyễn Đỗ Minh Uyên", l: "7E" },
             { n: "Dương Ý An", l: "7F" }, { n: "Hồ Minh Anh", l: "7F" }, { n: "Lê Hoàng Huy", l: "7F" }, { n: "Trần Hữu Khang", l: "7F" }, { n: "Phan Lê Phúc Lộc", l: "7F" }, { n: "Phạm Bình Minh", l: "7F" }, { n: "Nguyễn Ái Nhân", l: "7F" }, { n: "Phan Chí Nhân", l: "7F" }, { n: "Huỳnh Thiện Nhân", l: "7F" }, { n: "Lê Nguyễn Thiên Phúc", l: "7F" }, { n: "Trương Phú Trọng", l: "7F" }, { n: "Lê Phạm Hoàng Yến", l: "7F" },
@@ -249,6 +263,7 @@
             { id: 'jp', greeting: 'Chúc Mừng Oshogatsu (あけましておめでとう)' }
         ];
 
+        // Khởi tạo chủ đề ngẫu nhiên ngay khi load
         const currentCulture = cultures[Math.floor(Math.random() * cultures.length)];
         document.documentElement.setAttribute('data-theme', currentCulture.id);
 
@@ -258,50 +273,63 @@
             document.getElementById('btnMain').style.display = 'none';
             card.style.display = 'block';
 
+            // Gán nội dung văn hóa
             document.getElementById('txtHeader').innerText = currentCulture.greeting;
-            document.getElementById('txtFriend').innerText = `🧧 Hãy gửi lời chúc này đến bạn: ${student.n} - Lớp ${student.l}`;
 
-            // Random wish & oracle
-            const coreWishes = ["Thầy chúc Trò nâng cấp bản thân lên v2026 cực mượt.", "Chúc Trò 'Compile' ước mơ thành công, không bị Bug.", "Chúc Trò năm mới 'Slay' trong mọi tiết học!", "Mong Trò 'Render' cuộc sống đầy màu sắc hạnh phúc."];
-            const oracles = ["🔮 Quẻ Python: Cuộc sống không Syntax Error.", "🔮 Quẻ Excel: May mắn luôn được hàm SUM cộng dồn!", "🔮 Quẻ Mạng: Băng thông niềm vui luôn ở mức Max.", "🔮 Quẻ AI: Năm nay Trò sẽ thông minh hơn cả siêu máy tính!"];
+            // Random lời chúc và quẻ
+            const wishes = [
+                "Thầy chúc Trò năm mới Bính Ngọ 'Khai báo' thành công, 'Render' hạnh phúc.",
+                "Chúc Trò nâng cấp bản thân lên v2026 cực mượt, không bao giờ gặp Bug.",
+                "Năm mới chúc Trò học hành 'đỉnh nóc kịch trần', luôn Slay trong mọi tiết học!",
+                "Thầy mong Trò logic luôn thông suốt, vạn sự hanh thông, công thành danh toại."
+            ];
+            const oracles = [
+                "🔮 Quẻ Excel: May mắn luôn được hàm SUM cộng dồn vào đời Trò!",
+                "🔮 Quẻ Python: Cuộc sống trôi chảy, không một lỗi Syntax Error.",
+                "🔮 Quẻ Network: Băng thông niềm vui Max, không bao giờ lo bị Lag.",
+                "🔮 Quẻ AI: Trí tuệ năm nay đột phá, giải đề nhanh hơn cả siêu máy tính!"
+            ];
 
-            document.getElementById('txtWish').innerText = coreWishes[Math.floor(Math.random() * coreWishes.length)];
+            document.getElementById('txtWish').innerText = wishes[Math.floor(Math.random() * wishes.length)];
             document.getElementById('txtOracle').innerText = oracles[Math.floor(Math.random() * oracles.length)];
 
-            // Firework effect
-            if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+            // Dòng dặn dò gửi cho bạn (Dưới cùng)
+            document.getElementById('txtFriend').innerText = `🧧 Hãy giữ lời chúc này và gửi đến bạn: ${student.n} (Lớp ${student.l})`;
         }
 
-        // Canvas animation logic (giản lược để mượt mà trên mobile)
+        // CANVAS: HIỆU ỨNG HOA RƠI MƯỢT MÀ
         const canvas = document.getElementById('visualCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize); resize();
 
-        class P {
+        class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.s = Math.random() * 5 + 2;
-                this.vY = Math.random() * 1 + 1;
+                this.size = Math.random() * 6 + 4;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.wind = Math.random() * 0.5 - 0.25;
             }
             draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.s, 0, Math.PI * 2);
-                ctx.fillStyle = currentCulture.id === 'vn' ? '#ffd700' : '#ffb7c5';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'vn' || document.documentElement.getAttribute('data-theme') === 'cn') ? '#ffd700' : '#ffb7c5';
                 ctx.fill();
             }
-            up() {
-                this.y += this.vY; if (this.y > canvas.height) this.y = -10;
+            update() {
+                this.y += this.speedY; this.x += this.wind;
+                if (this.y > canvas.height) { this.y = -10; this.x = Math.random() * canvas.width; }
             }
         }
-        for (let i = 0; i < 40; i++) particles.push(new P());
-        function anim() {
+        for (let i = 0; i < 45; i++) particles.push(new Particle());
+        function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.up(); p.draw(); });
-            requestAnimationFrame(anim);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
         }
-        anim();
+        animate();
     </script>
 </body>
 
