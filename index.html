@@ -250,13 +250,29 @@
     </main>
 
     <footer class="footer-branding">
-        <img
-            src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8">
-        <div style="color: var(--secondary)">
-            <div style="font-weight: bold;">Thầy Nguyễn Thiện Chí</div>
-            <div style="font-size: 0.75rem;">Chúc Trò vạn sự hanh thông!</div>
+        <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8"
+            alt="Thầy Nguyễn Thiện Chí">
+
+        <div style="color: var(--secondary); text-align: left;">
+            <div style="font-weight: bold;">
+                <a href="https://www.facebook.com/goodwill288" target="_blank"
+                    style="color: var(--secondary); text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.3s ease;">
+                    Thầy Nguyễn Thiện Chí
+                </a>
+            </div>
+            <div style="font-size: 0.75rem; opacity: 0.9;">Chúc Trò vạn sự hanh thông!</div>
         </div>
     </footer>
+
+    <style>
+        /* Hiệu ứng nhỏ cho link Facebook khi di chuột vào hoặc chạm trên mobile */
+        .footer-branding a:hover,
+        .footer-branding a:active {
+            color: #fff !important;
+            text-shadow: 0 0 8px var(--secondary);
+            border-bottom: 1px solid var(--secondary);
+        }
+    </style>
 
     <script>
         const students = [
