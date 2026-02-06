@@ -271,10 +271,10 @@
         ];
 
         const cultures = [
-            { id: 'vn', greeting: 'Chúc Mừng Năm Mới 2026' },
+            { id: 'vn', greeting: 'Chúc Mừng Năm Mới <br><small>(Ngũ phúc lâm môn)</small>' },
             { id: 'cn', greeting: 'Chúc Mừng Tân Niên<br><small>(新年快乐)</small>' },
-            { id: 'kr', greeting: 'Chúc Mừng Seollal<br><small>(새해 복 많이 받으세요)</small>' },
-            { id: 'jp', greeting: 'Chúc Mừng Oshogatsu<br><small>(あけましておめでとう)</small>' }
+            { id: 'kr', greeting: 'Cung chúc Tân Xuân<br><small>(새해 복 많이 받으세요)</small>' },
+            { id: 'jp', greeting: 'Tân niên Vạn Phúc<br><small>(あけましておめでとう)</small>' }
         ];
 
         const currentCulture = cultures[Math.floor(Math.random() * cultures.length)];
@@ -295,10 +295,72 @@
             document.getElementById('txtFriendName').innerText = `${student.n} - Lớp ${student.l}`;
 
             // Dữ liệu câu chúc & quẻ
-            const subjects = ["Thầy chúc Trò", "Năm mới chúc Trò", "Thầy mong Trò", "Thầy gửi Trò lời chúc", "Chúc Trò"];
-            const actions = ["học hành tấn tới", "logic thông suốt", "code chạy mượt mà", "thi cử thuận lợi", "tư duy sắc bén"];
-            const itTerms = ["như thuật toán tối ưu", "không dính Bug", "chạy nhanh như O(1)", "mượt như CSS chuẩn"];
-            const trends = ["học là phải slay 💅", "đỉnh nóc kịch trần 🚀", "vibe luôn on top 🔥"];
+            // ====== KHO DỮ LIỆU LỜI CHÚC ĐA DẠNG ======
+
+            const subjects = [
+                "Thầy chúc Trò",
+                "Năm mới Bính Ngọ, Thầy chúc Trò",
+                "Thầy mong Trò",
+                "Thầy gửi Trò lời chúc",
+                "Chúc Trò yêu quý của Thầy",
+                "Bước sang năm 2026, chúc Trò",
+                "Tết này, chúc Trò",
+                "Khai xuân rạng rỡ, chúc Trò",
+                "Dưới ánh mai vàng, Thầy mong Trò"
+            ];
+
+            const actions = [
+                // Học tập & Tư duy
+                "học hành tấn tới",
+                "logic thông suốt",
+                "thi cử thuận lợi",
+                "tư duy ngày càng sắc bén",
+                "tiếp thu kiến thức nhanh chóng",
+                "đạt được nhiều điểm 10 rạng rỡ",
+                "vượt qua mọi kỳ thi một cách nhẹ nhàng",
+                "trở thành phiên bản tốt hơn của chính mình",
+
+                // Tin học & Công nghệ
+                "code chạy mượt mà",
+                "kỹ năng lập trình thăng hạng",
+                "xây dựng được những thuật toán thông minh",
+                "làm chủ mọi ngôn ngữ lập trình",
+                "thiết kế cuộc đời đẹp như giao diện chuẩn UX/UI",
+                "vận hành cuộc sống chính xác như một bộ vi xử lý",
+                "kết nối với thành công với băng thông cực đại",
+                "bảo mật hạnh phúc khỏi mọi nỗi buồn"
+            ];
+
+            const itTerms = [
+                // Nhóm so sánh Tin học (Dành cho quẻ Tin học)
+                "như thuật toán tối ưu nhất",
+                "không bao giờ dính Bug hay Error",
+                "không gặp lỗi Syntax (cú pháp) trong đời",
+                "chạy nhanh và hiệu quả như độ phức tạp O(1)",
+                "mượt mà như CSS3 được tối ưu",
+                "debug mọi khó khăn phát ăn ngay",
+                "luôn ở chế độ High Performance (hiệu suất cao)",
+                "bền bỉ như ổ cứng SSD cao cấp",
+                "thông minh như trí tuệ nhân tạo (AI) thế hệ mới",
+                "vững chãi như cấu trúc dữ liệu cây nhị phân",
+                "linh hoạt như hàm xử lý đa luồng (Multi-threading)",
+                "không bao giờ bị Timeout (hết giờ) trước cơ hội"
+            ];
+
+            const trends = [
+                // Nhóm Trend Gen Z & Mạng xã hội
+                "học là phải slay 💅",
+                "đỉnh nóc kịch trần bay phấp phới 🚀",
+                "vibe luôn on top không bao giờ flop 🔥",
+                "mãi mận mãi keo trên con đường học vấn 🍎",
+                "không toxic, chỉ toàn magic 🪄",
+                "flex toàn điểm 10 cho thiên hạ trầm trồ 😎",
+                "ngoan xinh yêu của Thầy Chí 🎀",
+                "học hết mình, quẩy nhiệt tình, điểm số lung linh",
+                "thân hình khỏe mạnh như PC gaming cực khủng 🖥️",
+                "năng lượng tràn đầy, 'nhả vía' học giỏi cho cả lớp",
+                "nhan sắc thăng hạng, học lực bùng nổ 💥"
+            ];
 
             const wishList = [];
             subjects.forEach(s => actions.forEach(a => itTerms.forEach(i => wishList.push(`${s} ${a}, ${i}.`))));
