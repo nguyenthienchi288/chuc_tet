@@ -302,57 +302,129 @@
 
             document.getElementById('txtHeader').innerText = currentCulture.greeting;
 
-            // Hệ thống câu chúc random
-            const wishes = [
-                "Thầy chúc Trò năm mới 'Khai báo' niềm vui, 'Render' hạnh phúc, mọi dự án cuộc đời đều 'Success'!",
-                "Chúc Trò nâng cấp bản thân lên phiên bản v2026 mượt mà, tốc độ xử lý thành công cực nhanh!",
-                "Năm mới chúc Trò học hành 'đỉnh nóc kịch trần', luôn giữ phong độ 'Slay' trong mọi tiết học!",
-                "Thầy mong Trò logic thông suốt như thuật toán tối ưu, vạn sự hanh thông, công thành danh toại."
+            // Random lời chúc và quẻ
+            // ====== NGUYÊN LIỆU ======
+            const subjects = [
+                "Thầy chúc Trò",
+                "Năm mới chúc Trò",
+                "Thầy mong Trò",
+                "Thầy gửi Trò lời chúc",
+                "Chúc Trò",
             ];
+
+            const actionsVN = [
+                "học hành tấn tới",
+                "logic thông suốt",
+                "code chạy mượt mà",
+                "thi cử thuận lợi",
+                "tư duy ngày càng sắc bén",
+                "đam mê công nghệ bùng nổ",
+                "đạt nhiều thành tích mới",
+                "luôn tự tin và bản lĩnh",
+            ];
+
+            const itTerms = [
+                "như thuật toán tối ưu",
+                "không bao giờ gặp Bug",
+                "không dính Syntax Error",
+                "debug phát ăn ngay",
+                "chạy nhanh như O(1)",
+                "mạnh mẽ như AI thế hệ mới",
+                "ổn định như hệ điều hành Linux",
+                "mượt như giao diện CSS chuẩn",
+            ];
+
+            // Song ngữ Anh – Việt
+            const bilingual = [
+                "Happy New Year – Chúc Trò năm mới rực rỡ và thành công!",
+                "New year, new version – Phiên bản Trò 2026 nâng cấp toàn diện!",
+                "Keep learning, keep growing – Học nữa, học mãi, học thông minh!",
+                "Code your dream – Lập trình tương lai theo cách của Trò!",
+            ];
+
+            // Tiếng Trung (kèm giải thích)
+            const chinese = [
+                "新年快乐 (Xīn nián kuài lè – Chúc mừng năm mới)",
+                "学业进步 (Xué yè jìn bù – Học tập tiến bộ)",
+                "万事如意 (Wàn shì rú yì – Vạn sự như ý)",
+                "前程似锦 (Qián chéng sì jǐn – Tương lai rực rỡ)",
+            ];
+
+            // Trend mạng xã hội
+            const trends = [
+                "học là phải slay 💅",
+                "đỉnh nóc kịch trần bay phấp phới 🚀",
+                "vibe học tập luôn on top 🔥",
+                "học không áp lực, áp lực không học 😄",
+                "code ít bug, điểm nhiều A+",
+                "chăm chỉ một chút, thành công một đời",
+            ];
+
+            // ====== SINH CÂU CHÚC ======
+            const wishes = [];
+
+            // Tiếng Việt + IT
+            subjects.forEach(s =>
+                actionsVN.forEach(a =>
+                    itTerms.forEach(i =>
+                        wishes.push(`${s} ${a}, ${i}.`)
+                    )
+                )
+            );
+
+            // Song ngữ
+            bilingual.forEach(b => wishes.push("🌏 " + b));
+
+            // Trung + giải thích
+            chinese.forEach(c => wishes.push("🀄 " + c));
+
+            // Trend
+            trends.forEach(t => wishes.push("🔥 Năm mới chúc Trò " + t + "!"));
+
+            console.log("Tổng số câu chúc:", wishes.length); // > 200
+
+
+            // ====== QUẺ BÓI ======
             const oracles = [
-                "🔮 Quẻ Excel: May mắn luôn được hàm SUM cộng dồn vào đời Trò!",
-                "🔮 Quẻ Python: Cuộc sống trôi chảy, không một lỗi Syntax Error.",
-                "🔮 Quẻ Network: Băng thông niềm vui Max, kết nối bạn bè cực mạnh.",
-                "🔮 Quẻ AI: Trí tuệ năm nay bùng nổ, sáng tạo vượt xa mọi thuật toán!"
+                "🔮 Quẻ Excel: Hàm SUM may mắn cộng dồn cả năm!",
+                "🔮 Quẻ Python: Cuộc sống chạy mượt, không lỗi Runtime.",
+                "🔮 Quẻ C++: Kiên trì như vòng lặp while – chưa xong là chưa dừng!",
+                "🔮 Quẻ Network: Kết nối thầy – trò ổn định, không bao giờ timeout.",
+                "🔮 Quẻ AI: Trí tuệ nhân tạo – trí tuệ Trò năm nay tăng theo cấp số nhân!",
+                "🔮 Quẻ Database: Kiến thức lưu bền vững, không bao giờ bị mất dữ liệu.",
             ];
 
-            document.getElementById('txtWish').innerText = wishes[Math.floor(Math.random() * wishes.length)];
-            document.getElementById('txtOracle').innerText = oracles[Math.floor(Math.random() * oracles.length)];
 
-            // Hiển thị tên học sinh (có xử lý tránh xuống dòng)
-            document.getElementById('txtFriendName').innerText = `${student.n} - Lớp ${student.l}`;
-        }
+            // --- Canvas Hoa Rơi ---
+            const canvas = document.getElementById('visualCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resize); resize();
 
-        // --- Canvas Hoa Rơi ---
-        const canvas = document.getElementById('visualCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 5 + 3;
-                this.speedY = Math.random() * 1.5 + 0.5;
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 5 + 3;
+                    this.speedY = Math.random() * 1.5 + 0.5;
+                }
+                draw() {
+                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'vn' || document.documentElement.getAttribute('data-theme') === 'cn') ? '#ffd700' : '#ffb7c5';
+                    ctx.fill();
+                }
+                update() {
+                    this.y += this.speedY; if (this.y > canvas.height) this.y = -10;
+                }
             }
-            draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'vn' || document.documentElement.getAttribute('data-theme') === 'cn') ? '#ffd700' : '#ffb7c5';
-                ctx.fill();
+            for (let i = 0; i < 40; i++) particles.push(new Particle());
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(animate);
             }
-            update() {
-                this.y += this.speedY; if (this.y > canvas.height) this.y = -10;
-            }
-        }
-        for (let i = 0; i < 40; i++) particles.push(new Particle());
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-        animate();
+            animate();
     </script>
 </body>
 
