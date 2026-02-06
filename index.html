@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tết 2026 - Thầy Nguyễn Thiện Chí</title>
+    <title>Tết Bính Ngọ 2026 - Thầy Nguyễn Thiện Chí</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Noto+Serif+JP:wght@700&family=Noto+Serif+KR:wght@700&family=ZCOOL+XiaoWei&family=Quicksand:wght@400;600&display=swap"
         rel="stylesheet">
@@ -19,40 +19,41 @@
             --font-title: 'Dancing Script', cursive;
         }
 
-        /* Việt Nam */
+        /* Themes Culture - Tối ưu hiển thị */
         [data-theme="vn"] {
             --primary: #b71c1c;
             --secondary: #ffeb3b;
             --accent: #2e7d32;
             --pattern: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+            --card-text: #1a1a1a;
         }
 
-        /* Trung Quốc */
         [data-theme="cn"] {
             --primary: #cc0000;
             --secondary: #ffca28;
             --accent: #004d40;
             --font-title: 'ZCOOL XiaoWei', serif;
             --pattern: url('https://www.transparenttextures.com/patterns/exclusive-paper.png');
+            --card-text: #1a1a1a;
         }
 
-        /* Hàn Quốc */
         [data-theme="kr"] {
             --primary: #283593;
             --secondary: #e91e63;
             --accent: #fbc02d;
             --font-title: 'Noto Serif KR', serif;
             --pattern: url('https://www.transparenttextures.com/patterns/fancy-pants.png');
+            --card-text: #1a1a1a;
         }
 
-        /* Nhật Bản - Tối ưu hóa màu sắc */
         [data-theme="jp"] {
-            --primary: #bc002d;
-            --secondary: #fdfdfd;
+            --primary: #f5f5f5;
+            --secondary: #bc002d;
             --accent: #1b5e20;
-            --ink: #212121;
             --font-title: 'Noto Serif JP', serif;
             --pattern: url('https://www.transparenttextures.com/patterns/shippo.png');
+            --card-text: #212121;
+            --ink: #212121;
         }
 
         body {
@@ -112,6 +113,7 @@
             cursor: pointer;
             font-family: var(--font-title);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: 0.3s;
             animation: pulse 2s infinite;
         }
 
@@ -137,11 +139,11 @@
             padding: 25px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border: 4px double var(--primary);
+            border: 4px double var(--secondary);
             border-radius: 20px;
             text-align: center;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.8s ease forwards;
+            animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         @keyframes slideUp {
@@ -158,64 +160,62 @@
 
         .header-greeting {
             font-family: var(--font-title);
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 10px;
+            font-size: 2.2rem;
+            color: var(--secondary);
+            background: var(--primary);
+            -webkit-background-clip: text;
+            padding: 10px;
+            margin-bottom: 10px;
         }
 
         .wish-content {
             font-size: 1.15rem;
-            color: #333;
-            margin-bottom: 20px;
-            font-weight: 600;
+            color: var(--card-text);
+            margin-bottom: 15px;
+            font-weight: 500;
             line-height: 1.6;
         }
 
         .oracle-tag {
             display: inline-block;
-            padding: 8px 18px;
+            padding: 8px 15px;
             background: var(--accent);
             color: white;
             border-radius: 10px;
             font-style: italic;
             font-size: 0.9rem;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        /* Chỉnh sửa phần Gửi lời chúc để không lỗi xuống dòng */
+        /* Sửa lỗi xuống dòng Tên */
         .random-friend {
-            background: #fff8e1;
-            border-top: 2px dashed var(--primary);
-            padding: 15px 10px;
-            color: #d84315;
+            background: linear-gradient(to right, transparent, #fff3e0, transparent);
+            border-top: 1px dashed #e65100;
+            padding: 15px 5px;
+            color: #e65100;
             font-weight: bold;
             font-size: 0.95rem;
-            border-radius: 0 0 16px 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .student-name {
-            color: var(--primary);
-            font-size: 1.1rem;
-            text-decoration: underline;
+            display: inline-block;
             white-space: nowrap;
-            /* Không cho xuống dòng */
+            color: #b71c1c;
+            text-decoration: underline;
         }
 
         .footer-branding {
             position: relative;
             z-index: 10;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 15px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 15px;
             border-top: 2px solid var(--secondary);
         }
 
@@ -229,6 +229,7 @@
 
         .teacher-info {
             color: var(--secondary);
+            text-align: left;
         }
     </style>
 </head>
@@ -238,9 +239,9 @@
     <div class="silk-overlay"></div>
     <canvas id="visualCanvas"></canvas>
 
-    <audio id="bgMusic" loop>
+    <audio id="tetMusic" loop>
         <source
-            src="https://ia800101.us.archive.org/31/items/nhu-hoa-mua-xuan-phung-khanh-linh-wren-evans-nhac-moi-tet-nay-v.-a-playlist-nhac-cua-tui/Nh%C6%B0%20Hoa%20M%C3%B9a%20Xu%C3%A2n%20-%20Ph%C3%B9ng%20Kh%C3%A1nh%20Linh%2C%20Wren%20Evans%20-%20Nh%E1%BA%A1c%20M%E1%BB%9Bi%20T%E1%BA%BFt%20N%C3%A0y%20-%20V.A%20-%20Playlist%20NhacCuaTui.mp3?cnt=0"
+            src="https://ia800101.us.archive.org/31/items/nhu-hoa-mua-xuan-phung-khanh-linh-wren-evans-nhac-moi-tet-nay-v.-a-playlist-nhac-cua-tui/Nh%C6%B0%20Hoa%20M%C3%B9a%20Xu%C3%A2n%20-%20Ph%C3%B9ng%20Kh%C3%A1nh%20Linh%2C%20Wren%20Evans%20-%20Nh%E1%BA%A1c%20M%E1%BB%9Bi%20T%E1%BA%BFt%20N%C3%A0y%20-%20V.A%20-%20Playlist%20NhacCuaTui.mp3"
             type="audio/mpeg">
     </audio>
 
@@ -252,8 +253,8 @@
             <div class="wish-content" id="txtWish"></div>
             <div class="oracle-tag" id="txtOracle"></div>
             <div class="random-friend">
-                <span>Hãy giữ lời chúc này và gửi đến bạn:</span>
-                <span class="student-name" id="txtFriend"></span>
+                🧧 Hãy giữ lời chúc này và gửi đến bạn:<br>
+                <span class="student-name" id="txtFriendName"></span>
             </div>
         </div>
     </main>
@@ -283,7 +284,7 @@
             { id: 'vn', greeting: 'Chúc Mừng Năm Mới 2026' },
             { id: 'cn', greeting: 'Chúc Mừng Tân Niên (新年快乐)' },
             { id: 'kr', greeting: 'Chúc Mừng Seollal (새해 복 많이 받으세요)' },
-            { id: 'jp', greeting: '明けましておめでとう (Chúc Mừng 2026)' }
+            { id: 'jp', greeting: 'Chúc Mừng Oshogatsu (あけましておめでとう)' }
         ];
 
         const currentCulture = cultures[Math.floor(Math.random() * cultures.length)];
@@ -291,8 +292,8 @@
 
         function handleOpen() {
             // Phát nhạc ngay khi nhấn nút
-            const audio = document.getElementById('bgMusic');
-            audio.play().catch(e => console.log("Cần tương tác để phát nhạc"));
+            const audio = document.getElementById('tetMusic');
+            audio.play().catch(e => console.log("Yêu cầu tương tác trước khi phát nhạc"));
 
             const student = students[Math.floor(Math.random() * students.length)];
             const card = document.getElementById('wishCard');
@@ -301,25 +302,28 @@
 
             document.getElementById('txtHeader').innerText = currentCulture.greeting;
 
+            // Hệ thống câu chúc random
             const wishes = [
-                "Thầy chúc Trò năm mới 'Khai báo' thành công, 'Render' hạnh phúc, code chạy mượt mà không lỗi!",
-                "Chúc Trò nâng cấp bản thân lên phiên bản 2026 đỉnh cao, xử lý mọi bài tập nhanh như CPU thế hệ mới!",
-                "Năm mới chúc Trò học hành 'đỉnh nóc kịch trần', luôn giữ vững phong độ Slay trong mọi tiết học!",
-                "Thầy mong Trò logic thông suốt như sợi cáp quang, vạn sự hanh thông, công thành danh toại!"
+                "Thầy chúc Trò năm mới 'Khai báo' niềm vui, 'Render' hạnh phúc, mọi dự án cuộc đời đều 'Success'!",
+                "Chúc Trò nâng cấp bản thân lên phiên bản v2026 mượt mà, tốc độ xử lý thành công cực nhanh!",
+                "Năm mới chúc Trò học hành 'đỉnh nóc kịch trần', luôn giữ phong độ 'Slay' trong mọi tiết học!",
+                "Thầy mong Trò logic thông suốt như thuật toán tối ưu, vạn sự hanh thông, công thành danh toại."
             ];
             const oracles = [
-                "🔮 Quẻ Excel: Hàm SUM may mắn cộng dồn cho Trò cả năm!",
-                "🔮 Quẻ Python: Cuộc sống chạy mượt, không bao giờ dính lỗi thụt lề.",
-                "🔮 Quẻ AI: Trí thông minh của Trò năm nay sẽ tăng vọt như cấp số nhân!",
-                "🔮 Quẻ Mạng: Kết nối thầy trò luôn ổn định, điểm số On Top không bao giờ Lag!"
+                "🔮 Quẻ Excel: May mắn luôn được hàm SUM cộng dồn vào đời Trò!",
+                "🔮 Quẻ Python: Cuộc sống trôi chảy, không một lỗi Syntax Error.",
+                "🔮 Quẻ Network: Băng thông niềm vui Max, kết nối bạn bè cực mạnh.",
+                "🔮 Quẻ AI: Trí tuệ năm nay bùng nổ, sáng tạo vượt xa mọi thuật toán!"
             ];
 
             document.getElementById('txtWish').innerText = wishes[Math.floor(Math.random() * wishes.length)];
             document.getElementById('txtOracle').innerText = oracles[Math.floor(Math.random() * oracles.length)];
-            document.getElementById('txtFriend').innerText = `${student.n} (Lớp ${student.l})`;
+
+            // Hiển thị tên học sinh (có xử lý tránh xuống dòng)
+            document.getElementById('txtFriendName').innerText = `${student.n} - Lớp ${student.l}`;
         }
 
-        // Canvas animation
+        // --- Canvas Hoa Rơi ---
         const canvas = document.getElementById('visualCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -335,16 +339,14 @@
             }
             draw() {
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                const theme = document.documentElement.getAttribute('data-theme');
-                ctx.fillStyle = (theme === 'vn' || theme === 'cn') ? '#ffd700' : (theme === 'jp' ? '#ffffff' : '#ffb7c5');
+                ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'vn' || document.documentElement.getAttribute('data-theme') === 'cn') ? '#ffd700' : '#ffb7c5';
                 ctx.fill();
             }
             update() {
-                this.y += this.speedY;
-                if (this.y > canvas.height) { this.y = -10; this.x = Math.random() * canvas.width; }
+                this.y += this.speedY; if (this.y > canvas.height) this.y = -10;
             }
         }
-        for (let i = 0; i < 50; i++) particles.push(new Particle());
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
