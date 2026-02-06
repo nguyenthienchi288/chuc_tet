@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chúc Tết 2026 - Thầy Nguyễn Thiện Chí</title>
+    <title>Tết 2026 - Thầy Nguyễn Thiện Chí</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap"
         rel="stylesheet">
@@ -20,14 +20,12 @@
             padding: 0;
             font-family: 'Quicksand', sans-serif;
             background: #8b0000;
-            /* Màu đỏ nền truyền thống */
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* Canvas cho hiệu ứng hoa rơi */
         #flowerCanvas {
             position: fixed;
             top: 0;
@@ -36,59 +34,47 @@
             z-index: 1;
         }
 
-        /* Lồng đèn trang trí */
         .lantern {
             position: fixed;
             top: -10px;
-            width: 50px;
-            height: 60px;
+            width: 40px;
+            height: 50px;
             background: var(--red-tet);
-            border-radius: 50% 50% 45% 45%;
+            border-radius: 40% 40% 35% 35%;
             border: 2px solid var(--gold-tet);
             z-index: 2;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
             animation: swing 3s ease-in-out infinite;
             transform-origin: top center;
-        }
-
-        .lantern:before {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: 22px;
-            width: 4px;
-            height: 10px;
-            background: var(--gold-tet);
         }
 
         .lantern:after {
             content: "";
             position: absolute;
-            bottom: -15px;
-            left: 22px;
+            bottom: -12px;
+            left: 18px;
             width: 4px;
-            height: 15px;
+            height: 12px;
             background: var(--gold-tet);
         }
 
         .lantern.left {
-            left: 10%;
+            left: 5%;
         }
 
         .lantern.right {
-            right: 10%;
-            animation-delay: 1s;
+            right: 5%;
+            animation-delay: 1.5s;
         }
 
         @keyframes swing {
 
             0%,
             100% {
-                transform: rotate(-5deg);
+                transform: rotate(-8deg);
             }
 
             50% {
-                transform: rotate(5deg);
+                transform: rotate(8deg);
             }
         }
 
@@ -106,36 +92,32 @@
 
         .title {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             color: var(--gold-tet);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px var(--gold-tet);
-            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
         }
 
-        /* Nút bấm phong cách bao lì xì */
         .btn-lixi {
             background: linear-gradient(145deg, #ff4d4d, #b30000);
             color: var(--gold-tet);
             border: 3px solid var(--gold-tet);
-            padding: 15px 35px;
+            padding: 18px 40px;
             font-size: 1.2rem;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-            transition: 0.3s;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
             0% {
                 transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
             }
 
-            70% {
+            50% {
                 transform: scale(1.05);
-                box-shadow: 0 0 0 15px rgba(255, 215, 0, 0);
             }
 
             100% {
@@ -143,88 +125,77 @@
             }
         }
 
-        /* Khung quẻ may mắn */
         .card {
             display: none;
             margin-top: 25px;
             background: #fff8e1;
-            /* Màu giấy cũ */
-            border: 8px double var(--dark-red);
-            padding: 25px;
+            border: 6px double var(--dark-red);
+            padding: 20px;
             width: 90%;
-            max-width: 400px;
-            border-radius: 5px;
+            max-width: 450px;
+            border-radius: 15px;
             color: #333;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-            position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
         }
 
         .wish {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: var(--dark-red);
             font-weight: 600;
             margin-bottom: 15px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .oracle {
             font-style: italic;
-            border-top: 1px dashed #ccc;
+            border-top: 1px dashed #d32f2f;
             padding-top: 15px;
             color: #d32f2f;
+            font-size: 0.95rem;
         }
 
-        /* Footer Thầy Chí */
         .footer {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
             width: 100%;
             color: var(--gold-tet);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             border-top: 2px solid var(--gold-tet);
             z-index: 20;
+            position: sticky;
+            bottom: 0;
         }
 
         .footer img {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: 2px solid var(--gold-tet);
-            object-fit: cover;
         }
 
-        /* Mobile Responsive */
         @media (max-width: 480px) {
             .title {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
 
-            .btn-lixi {
-                padding: 12px 25px;
+            .wish {
                 font-size: 1rem;
-            }
-
-            .card {
-                width: 85%;
             }
         }
     </style>
 </head>
 
 <body>
-
     <canvas id="flowerCanvas"></canvas>
     <div class="lantern left"></div>
     <div class="lantern right"></div>
 
     <div class="main-content">
-        <div class="title">Chúc Mừng Năm Mới 2026</div>
-
-        <button class="btn-lixi" onclick="xemQue()">🧧 MỞ LỘC ĐẦU XUÂN 🧧</button>
-
+        <div class="title">Tết Bính Ngọ 2026</div>
+        <button class="btn-lixi" onclick="xemQue()">🧧 NHẬN LỘC TỪ THẦY 🧧</button>
         <div class="card" id="ketqua">
             <div class="wish" id="txtWish"></div>
             <div class="oracle" id="txtOracle"></div>
@@ -232,190 +203,120 @@
     </div>
 
     <div class="footer">
-        <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8"
-            alt="Thầy Chí">
+        <img
+            src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8">
         <div>
             <div style="font-weight: bold;">Thầy Nguyễn Thiện Chí</div>
-            <div style="font-size: 0.8rem; opacity: 0.8;">Chúc các Trò vạn sự như ý</div>
+            <div style="font-size: 0.75rem;">Chúc Trò vạn sự hanh thông!</div>
         </div>
     </div>
 
     <script>
-        // Hệ thống tạo lời chúc thông minh - Hơn 200+ tổ hợp
-        const wishes = [
-            // Phong cách Tin học & Công nghệ
-            "🌸 Thầy chúc Trò năm mới 2026: 'Khai báo' thành công, 'Render' hạnh phúc, 'Compile' mọi ước mơ đều không lỗi!",
-            "🧧 Năm mới: Chúc Trò 'Ping' đâu trúng đó, 'Connection' luôn mạnh mẽ với những cơ hội mới!",
-            "🌟 Chúc Trò năm Bính Ngọ: Tốc độ xử lý như Core i9, bộ nhớ siêu phàm như SSD 2TB!",
-            "🎀 Thầy chúc Trò: 'Update' bản thân mỗi ngày, 'Fix' hết các thói quen xấu, 'Build' nên một tương lai rạng rỡ!",
-            "🚀 Chúc Trò 2026: 'Bandwidth' (băng thông) niềm vui luôn max, không bao giờ bị 'timeout' trước khó khăn!",
-            "💻 Thầy mong Trò: Logic như Python, nhanh như C++, đẹp như CSS và vững chãi như Java!",
-            "🔥 Chúc Trò: Luôn ở chế độ 'High Performance', không bao giờ bị 'Low Battery' năng lượng nhé!",
+        // HỆ THỐNG TẠO 200+ LỜI CHÚC TỰ ĐỘNG
+        const openings = ["Năm mới Bính Ngọ, ", "Xuân 2026 tới rồi, ", "Giao thừa vừa điểm, ", "Khởi đầu chương mới, ", "Tết này, ", "Chào 2026 rực rỡ, "];
+        const closings = [" nhé Trò yêu!", " thành công rực rỡ!", " vạn sự như ý!", " luôn tỏa sáng nhé!", " thật bùng nổ nha!", " hạnh phúc đong đầy!"];
 
-            // Phong cách Hán Việt / Thành ngữ (Có giải thích)
-            "🏮 Chúc Trò: 'Vạn Sự Như Ý' (Mọi việc đều theo ý muốn) - Thành công rực rỡ nhé!",
-            "🧧 Chúc Trò: 'Công Thành Danh Toại' (Sự nghiệp thành công, danh tiếng tốt đẹp)!",
-            "🌸 Chúc Trò: 'Tiền Trình Tự Cẩm' (Tương lai tươi sáng như gấm vóc) - Tiền đồ rộng mở!",
-            "🐎 Chúc Trò năm Bính Ngọ: 'Mã Đáo Thành Công' (Ngựa về ắt thành công) - Làm gì cũng thắng!",
-            "🏮 Chúc Trò: 'Nhất Lộ Phúc Tinh' (Suốt đường đi luôn có sao phúc chiếu mệnh)!",
+        const coreWishes = [
+            // Công nghệ/Tin học
+            "Thầy chúc Trò nâng cấp bản thân lên phiên bản v2026 cực mượt, không lỗi bug nào",
+            "Chúc Trò 'Compile' ước mơ thành công, 'Render' cuộc sống đầy màu sắc",
+            "Thầy mong Trò có tư duy sắc bén như thuật toán tối ưu nhất",
+            "Chúc Trò luôn ở chế độ 'High Performance', năng lượng dồi dào như pin vô tận",
+            "Thầy chúc Trò 'Debug' sạch sẽ mọi nỗi buồn, chỉ giữ lại 'Source Code' niềm vui",
+            "Happy New Year! Wish you stay 'Hungry and Foolish' với đam mê công nghệ",
+            "New year, new goal! Hãy tự viết nên chương trình thành công cho riêng mình",
 
-            // Phong cách Song ngữ Anh - Việt
-            "🌈 Happy New Year! Chúc Trò 'Stay Hungry, Stay Foolish' – Luôn khao khát kiến thức!",
-            "✨ New Year, New Version! Chúc Trò nâng cấp bản thân thành công mỹ mãn nhé!",
-            "🍎 Wish you a year full of 'Logic' and 'Magic'! (Chúc Trò một năm đầy tư duy và phép màu!)",
-            "🚀 Aim for the moon! Chúc Trò năm mới đặt mục tiêu cao và chinh phục mọi đỉnh cao!",
+            // Hán Việt & Ý nghĩa
+            "Thầy chúc Trò 'Mã Đáo Thành Công' - Ngựa về ắt thành công, làm gì cũng thắng",
+            "Chúc Trò 'Tiền Trình Tự Cẩm' - Tương lai tươi sáng và rạng rỡ như gấm vóc",
+            "Thầy mong Trò 'Vạn Sự Hanh Thông' - Mọi việc đều thuận lợi, không chút trở ngại",
+            "Chúc Trò 'Công Thành Danh Toại' - Sự nghiệp học hành đỗ đạt, tiếng thơm vang xa",
+            "Chúc Trò 'Nhất Phàm Phong Thuận' - Mọi cánh buồm đời Trò đều xuôi chiều gió",
 
-            // Phong cách Trend Gen Z & Mạng xã hội
-            "🧧 Chúc Trò năm mới: 'Ngoan xinh yêu' của Thầy, học hành 'đỉnh nóc kịch trần' luôn nhé!",
-            "🔥 Năm mới chúc Trò 'Flex' toàn điểm 10, 'Check-in' tại bảng vàng danh dự!",
-            "🌸 Chúc Trò 2026: Không 'toxic', chỉ 'magic'. Học hết mình, chơi nhiệt tình!",
-            "🌟 Chúc Trò: Luôn 'slay' trong mọi tiết học, 'vibe' lúc nào cũng năng lượng 100%!"
+            // Trend & Gen Z
+            "Thầy chúc Trò học hành 'đỉnh nóc kịch trần', nhan sắc 'mãi mận mãi keo'",
+            "Năm mới chúc Trò 'Flex' toàn điểm 10, 'Check-in' tại mọi bảng vàng danh dự",
+            "Thầy mong Trò lúc nào cũng 'Slay', làm chủ mọi 'Vibe' trong cuộc sống",
+            "Chúc Trò năm mới 'Ngoan xinh yêu', bài khó đến mấy cũng giải trong 1 nốt nhạc",
+            "Thầy chúc Trò 2026 không 'Toxic', chỉ toàn 'Logic' và niềm vui"
         ];
-
-        // Thêm các biến thể để đạt số lượng lớn
-        const prefixes = ["Năm mới Bính Ngọ, ", "Bước sang 2026, ", "Tết này, ", "Xuân sang, "];
-        const suffixes = [" nhé Trò!", " nha học trò cưng!", " thành công rực rỡ!", " vạn sự như ý!"];
-
-        // Hàm lấy ngẫu nhiên một lời chúc (Thầy có thể thêm hàng trăm câu tương tự vào mảng trên)
-        function getRandomWish() {
-            let base = wishes[Math.floor(Math.random() * wishes.length)];
-            return base;
-        }
 
         const oracles = [
-            // Quẻ lớp 7-8 (Excel, Scratch, Máy tính)
-            "🔮 Quẻ Excel: Năm nay đời Trò như hàm VLOOKUP, tìm đâu cũng thấy niềm vui và may mắn!",
-            "🔮 Quẻ Scratch: Các khối lệnh 'Hạnh phúc' đã được ghép xong, chỉ chờ Trò nhấn Cờ Xanh là chạy!",
-            "🔮 Quẻ Phần cứng: Sức khỏe Trò bền bỉ như chuột Genius, chịu va đập tốt trước mọi kỳ thi!",
-            "🔮 Quẻ Word: Cuộc sống năm tới được 'Auto-correct' hết nỗi buồn, chỉ còn lại niềm vui!",
-            "🔮 Quẻ Hệ điều hành: Trò sẽ đa nhiệm (Multi-tasking) cực tốt, vừa học giỏi vừa chơi hay!",
-
-            // Quẻ lớp 9-10-11 (Tin học ứng dụng, Python, HTML, Mạng)
-            "🔮 Quẻ Python: Cuộc đời không có 'Syntax Error', mọi dự định đều chạy 'Smooth' từ đầu đến cuối!",
-            "🔮 Quẻ Mạng: Tình bạn và kiến thức luôn ở trạng thái 'Connected', không bao giờ 'Disconnected'!",
-            "🔮 Quẻ HTML: Năm nay Trò là thẻ <h1>, luôn nổi bật và quan trọng nhất trong mọi dự án!",
-            "🔮 Quẻ CSS: Trò sẽ được 'Style' lại cuộc đời bằng những màu sắc rực rỡ và lôi cuốn nhất!",
-            "🔮 Quẻ Thuật toán: Trình độ giải quyết vấn đề của Trò đạt độ phức tạp O(1) - Nghĩa là cực nhanh!",
-            "🔮 Quẻ Database: May mắn được 'Insert' liên tục, nỗi buồn bị 'Drop' không thương tiếc!",
-            "🔮 Quẻ AI: Tư duy của Trò năm nay nhạy bén như trí tuệ nhân tạo thế hệ mới!",
-            "🔮 Quẻ Security: Mọi điều tiêu cực đều bị 'Firewall' của Trò chặn đứng từ vòng gửi xe!",
-            "🔮 Quẻ Robotics: Trò sẽ vận hành cuộc sống chính xác, hiệu quả và không biết mệt mỏi!",
-            "🔮 Quẻ Cấu trúc dữ liệu: Mọi khó khăn được sắp xếp theo 'Stack', cái nào đến sau xử lý trước cực gọn!",
-            "🔮 Quẻ Cloud: Thành công của Trò sẽ cao như mây (Cloud Computing), truy cập được ở bất cứ đâu!",
-            "🔮 Quẻ Phím tắt: Trò sẽ tìm được 'Shortcut' để đi đến thành công ngắn nhất và thông minh nhất!",
-            "🔮 Quẻ Cổng Logic: Năm nay Trò chỉ đi qua cổng AND (Vừa học giỏi VÀ Vừa nhiều tiền)!"
+            "🔮 Quẻ Excel: Đời Trò năm nay như hàm SUM, cộng dồn toàn may mắn và điểm 10!",
+            "🔮 Quẻ Python: Cuộc sống không 'Syntax Error', mọi dự định đều chạy 'Smooth' từ đầu đến cuối!",
+            "🔮 Quẻ HTML: Trò năm nay là thẻ <h1>, luôn nổi bật và quan trọng nhất!",
+            "🔮 Quẻ Network: Băng thông niềm vui của Trò cực lớn, không bao giờ lo bị 'Lag'!",
+            "🔮 Quẻ Scratch: Các khối lệnh Hạnh Phúc đã khớp, nhấn 'Cờ Xanh' là đời thăng hoa!",
+            "🔮 Quẻ Database: May mắn được 'Insert' liên tục, nỗi buồn bị 'Drop' vĩnh viễn!",
+            "🔮 Quẻ CSS: Trò sẽ được 'Style' lại cuộc đời bằng những màu sắc lung linh nhất!",
+            "🔮 Quẻ AI: Trí tuệ Trò năm nay đột phá, giải toán nhanh hơn cả GPT!",
+            "🔮 Quẻ Security: Mọi điều tiêu cực đều bị 'Firewall' của Trò chặn đứng hoàn toàn!",
+            "🔮 Quẻ Phần cứng: Sức khỏe Trò bền bỉ như ổ cứng SSD, chạy cực nhanh và ổn định!",
+            "🔮 Quẻ Cổng Logic: Năm nay Trò đi qua cổng AND (Học giỏi VÀ Nhiều tiền)!",
+            "🔮 Quẻ Thuật toán: Trình độ giải quyết vấn đề đạt O(1) - Nghĩa là cực nhanh và gọn!",
+            "🔮 Quẻ Word: Cuộc đời được 'Auto-save' hạnh phúc, không lo bị mất niềm vui!",
+            "🔮 Quẻ Robotics: Trò sẽ vận hành cuộc sống chính xác và hiệu quả như một Robot cao cấp!",
+            "🔮 Quẻ Cloud: Thành công cao như mây, có thể 'truy cập' ở bất cứ nơi đâu!",
+            "🔮 Quẻ Phím tắt: Trò sẽ tìm thấy 'Shortcut' ngắn nhất để chạm tay vào ước mơ!"
         ];
 
-        // Để có hơn 200 câu, ta có thể tự động tạo ra bằng cách kết hợp
-        // Nhưng ở đây em đã chọn lọc những câu chất lượng nhất liên quan đến Tin học.
-        // Thầy có thể copy nhân bản các câu trong mảng 'wishes' và 'oracles' để đủ số lượng 200+.
-
         function xemQue() {
             const card = document.getElementById('ketqua');
-            const wishText = getRandomWish();
-            const oracleText = oracles[Math.floor(Math.random() * oracles.length)];
+            // Tạo lời chúc ngẫu nhiên từ ma trận
+            const randomOpening = openings[Math.floor(Math.random() * openings.length)];
+            const randomCore = coreWishes[Math.floor(Math.random() * coreWishes.length)];
+            const randomClosing = closings[Math.floor(Math.random() * closings.length)];
 
-            document.getElementById('txtWish').innerText = wishText;
-            document.getElementById('txtOracle').innerText = oracleText;
+            const fullWish = randomOpening + randomCore + randomClosing;
+            const randomOracle = oracles[Math.floor(Math.random() * oracles.length)];
 
+            document.getElementById('txtWish').innerText = fullWish;
+            document.getElementById('txtOracle').innerText = randomOracle;
             card.style.display = 'block';
-            card.style.animation = 'fadeInUp 0.8s ease forwards';
-
-            // Hiệu ứng rung nhẹ nút bấm khi chọn
-            const btn = document.querySelector('.btn-lixi');
-            btn.style.animation = 'none';
-            setTimeout(() => btn.style.animation = 'pulse 2s infinite', 100);
+            card.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function xemQue() {
-            const card = document.getElementById('ketqua');
-            const w = wishes[Math.floor(Math.random() * wishes.length)];
-            const o = oracles[Math.floor(Math.random() * oracles.length)];
-
-            document.getElementById('txtWish').innerText = w;
-            document.getElementById('txtOracle').innerText = o;
-
-            card.style.display = 'block';
-            card.style.animation = 'fadeInUp 0.8s ease forwards';
-        }
-
-        // --- Hệ thống hoa mai rơi (Canvas) ---
+        // --- Hiệu ứng hoa mai rơi ---
         const canvas = document.getElementById('flowerCanvas');
         const ctx = canvas.getContext('2d');
         let flowers = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
 
         class Flower {
-            constructor() {
+            constructor() { this.init(); }
+            init() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height - canvas.height;
-                this.size = Math.random() * 10 + 10;
+                this.size = Math.random() * 8 + 10;
                 this.speed = Math.random() * 2 + 1;
                 this.angle = Math.random() * 360;
                 this.spin = Math.random() * 2 - 1;
             }
             draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle * Math.PI / 180);
+                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle * Math.PI / 180);
                 ctx.fillStyle = "#ffd700";
-                // Vẽ hoa mai 5 cánh đơn giản
                 for (let i = 0; i < 5; i++) {
-                    ctx.rotate(72 * Math.PI / 180);
-                    ctx.beginPath();
-                    ctx.ellipse(0, this.size / 2, this.size / 3, this.size / 2, 0, 0, 2 * Math.PI);
-                    ctx.fill();
+                    ctx.rotate(72 * Math.PI / 180); ctx.beginPath();
+                    ctx.ellipse(0, this.size / 2, this.size / 3, this.size / 2, 0, 0, 2 * Math.PI); ctx.fill();
                 }
-                ctx.beginPath();
-                ctx.arc(0, 0, this.size / 4, 0, 2 * Math.PI);
-                ctx.fillStyle = "#ff9800";
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(0, 0, this.size / 4, 0, 2 * Math.PI); ctx.fillStyle = "#ff9800"; ctx.fill();
                 ctx.restore();
             }
             update() {
-                this.y += this.speed;
-                this.angle += this.spin;
-                if (this.y > canvas.height) {
-                    this.y = -20;
-                    this.x = Math.random() * canvas.width;
-                }
+                this.y += this.speed; this.angle += this.spin;
+                if (this.y > canvas.height) this.init();
             }
         }
-
-        // sửa bình thường ở đây rồi commit lại là đc
-
-        for (let i = 0; i < 30; i++) flowers.push(new Flower());
-
+        for (let i = 0; i < 35; i++) flowers.push(new Flower());
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            flowers.forEach(f => {
-                f.update();
-                f.draw();
-            });
+            flowers.forEach(f => { f.update(); f.draw(); });
             requestAnimationFrame(animate);
         }
         animate();
     </script>
-
-    <style>
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
 </body>
 
 </html>
