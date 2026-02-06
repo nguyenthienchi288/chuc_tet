@@ -1,321 +1,388 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tết 2026 - Thầy Nguyễn Thiện Chí</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>New Year Blessings 2026</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+JP:wght@700&family=Noto+Serif+KR:wght@700&family=Quicksand:wght@600&display=swap"
         rel="stylesheet">
     <style>
+        /* PREMIUM CSS ARCHITECTURE 
+           Author: Senior Front-End Lead
+        */
         :root {
-            --red-tet: #d32f2f;
-            --gold-tet: #ffd700;
-            --dark-red: #8b0000;
+            /* Default: Vietnam Theme */
+            --primary: #d32f2f;
+            --accent: #ffd700;
+            --secondary: #8b0000;
+            --bg-pattern: radial-gradient(circle, #b30000 0%, #660000 100%);
+            --font-main: 'Quicksand', sans-serif;
+            --text-color: #ffd700;
+            --surface: rgba(255, 255, 255, 0.1);
+            --transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* THEME VARIATIONS */
+        body.theme-cn {
+            --primary: #ff0000;
+            --accent: #ffcc00;
+            --secondary: #990000;
+            --font-main: 'Ma Shan Zheng', cursive;
+            --bg-pattern: linear-gradient(45deg, #800000, #ff0000);
+        }
+
+        body.theme-vn {
+            --primary: #d32f2f;
+            --accent: #ffd700;
+            --secondary: #8b0000;
+            --font-main: 'Quicksand', sans-serif;
+        }
+
+        body.theme-kr {
+            --primary: #ffffff;
+            --accent: #1e3a8a;
+            --secondary: #e5e7eb;
+            --text-color: #1e293b;
+            --font-main: 'Noto Serif KR', serif;
+            --bg-pattern: conic-gradient(from 0deg, #f8fafc, #cbd5e1, #f8fafc);
+        }
+
+        body.theme-jp {
+            --primary: #ffffff;
+            --accent: #bc002d;
+            --secondary: #fce7e7;
+            --text-color: #333;
+            --font-main: 'Noto Serif JP', serif;
+            --bg-pattern: radial-gradient(circle, #ffffff, #ffe4e6);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Quicksand', sans-serif;
-            background: #8b0000;
-            overflow-x: hidden;
+            background: var(--bg-pattern);
+            font-family: var(--font-main);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
         }
 
-        #flowerCanvas {
+        /* COMPLEX BACKGROUND LAYERS */
+        .bg-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
+            background-image: url('data:image/svg+xml,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M0 40L40 0H20L0 20M40 40V20L20 40" fill="%23000" fill-opacity="0.05" fill-rule="evenodd"/></svg>');
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /* FLOATING DECORATIONS */
+        .decoration {
+            position: absolute;
             pointer-events: none;
             z-index: 1;
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2));
+            animation: float 6s ease-in-out infinite;
         }
 
-        .lantern {
-            position: fixed;
-            top: -10px;
-            width: 40px;
-            height: 50px;
-            background: var(--red-tet);
-            border-radius: 40% 40% 35% 35%;
-            border: 2px solid var(--gold-tet);
-            z-index: 2;
-            animation: swing 3s ease-in-out infinite;
-            transform-origin: top center;
-        }
-
-        .lantern:after {
-            content: "";
-            position: absolute;
-            bottom: -12px;
-            left: 18px;
-            width: 4px;
-            height: 12px;
-            background: var(--gold-tet);
-        }
-
-        .lantern.left {
-            left: 5%;
-        }
-
-        .lantern.right {
-            right: 5%;
-            animation-delay: 1.5s;
-        }
-
-        @keyframes swing {
+        @keyframes float {
 
             0%,
             100% {
-                transform: rotate(-8deg);
+                transform: translateY(0) rotate(0deg);
             }
 
             50% {
-                transform: rotate(8deg);
+                transform: translateY(-20px) rotate(5deg);
             }
         }
 
-        .main-content {
+        /* CONTAINER & GLASSMORPHISM */
+        .stage {
             position: relative;
             z-index: 10;
+            width: 90%;
+            max-width: 450px;
             text-align: center;
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 40px 20px;
+            border-radius: 30px;
+            background: var(--surface);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: var(--transition);
         }
 
-        .title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: var(--gold-tet);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
-        }
-
-        .btn-lixi {
-            background: linear-gradient(145deg, #ff4d4d, #b30000);
-            color: var(--gold-tet);
-            border: 3px solid var(--gold-tet);
-            padding: 18px 40px;
-            font-size: 1.2rem;
+        /* THE CALL TO ACTION */
+        .ceremonial-btn {
+            background: var(--accent);
+            color: var(--secondary);
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.4rem;
             font-weight: bold;
-            border-radius: 50px;
+            border-radius: 100px;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-            animation: pulse 2s infinite;
+            box-shadow: 0 0 30px var(--accent);
+            animation: pulse-gold 2s infinite;
+            transition: transform 0.3s;
         }
 
-        @keyframes pulse {
+        .ceremonial-btn:active {
+            transform: scale(0.9);
+        }
+
+        @keyframes pulse-gold {
             0% {
-                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
             }
 
-            50% {
-                transform: scale(1.05);
+            70% {
+                box-shadow: 0 0 0 20px rgba(255, 215, 0, 0);
             }
 
             100% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+            }
+        }
+
+        /* HIDDEN CONTENT REVEAL */
+        .reveal-content {
+            display: none;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .reveal-active .reveal-content {
+            display: block;
+            animation: scaleIn 0.8s var(--transition) forwards;
+        }
+
+        .reveal-active .ceremonial-btn {
+            display: none;
+        }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
                 transform: scale(1);
             }
         }
 
-        .card {
-            display: none;
-            margin-top: 25px;
-            background: #fff8e1;
-            border: 6px double var(--dark-red);
-            padding: 20px;
-            width: 90%;
-            max-width: 450px;
-            border-radius: 15px;
-            color: #333;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        h1 {
+            font-size: 2.8rem;
+            margin: 0 0 15px;
         }
 
-        .wish {
-            font-size: 1.15rem;
-            color: var(--dark-red);
-            font-weight: 600;
-            margin-bottom: 15px;
+        .blessing {
+            font-size: 1.2rem;
             line-height: 1.6;
+            margin-bottom: 25px;
         }
 
-        .oracle {
-            font-style: italic;
-            border-top: 1px dashed #d32f2f;
-            padding-top: 15px;
-            color: #d32f2f;
-            font-size: 0.95rem;
+        .fortune-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--accent);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            border: 1px solid var(--accent);
         }
 
-        .footer {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            width: 100%;
-            color: var(--gold-tet);
+        /* FOOTER BRANDING */
+        .teacher-footer {
+            position: absolute;
+            bottom: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border-top: 2px solid var(--gold-tet);
-            z-index: 20;
-            position: sticky;
-            bottom: 0;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 15px;
+            border-radius: 50px;
+            border: 1px solid var(--accent);
         }
 
-        .footer img {
-            width: 50px;
-            height: 50px;
+        .teacher-footer img {
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            border: 2px solid var(--gold-tet);
+            border: 2px solid var(--accent);
+            object-fit: cover;
         }
 
-        @media (max-width: 480px) {
-            .title {
+        /* CANVAS FOR PARTICLES */
+        #fxCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* MOBILE OPTIMIZATION */
+        @media (max-width: 400px) {
+            h1 {
                 font-size: 2rem;
             }
 
-            .wish {
-                font-size: 1rem;
+            .stage {
+                padding: 30px 15px;
             }
         }
     </style>
 </head>
 
 <body>
-    <canvas id="flowerCanvas"></canvas>
-    <div class="lantern left"></div>
-    <div class="lantern right"></div>
 
-    <div class="main-content">
-        <div class="title">Tết Bính Ngọ 2026</div>
-        <button class="btn-lixi" onclick="xemQue()">🧧 NHẬN LỘC TỪ THẦY 🧧</button>
-        <div class="card" id="ketqua">
-            <div class="wish" id="txtWish"></div>
-            <div class="oracle" id="txtOracle"></div>
+    <div class="bg-overlay"></div>
+    <canvas id="fxCanvas"></canvas>
+
+    <div class="decoration" style="top:5%; left:5%; font-size:3rem;" id="decorLeft">🧧</div>
+    <div class="decoration" style="top:10%; right:8%; font-size:2.5rem; animation-delay:1s;" id="decorRight">🌸</div>
+
+    <div class="stage" id="mainStage">
+        <button class="ceremonial-btn" onclick="revealBlessing()">
+            <span id="btnText">Khai Xuân 2026</span>
+        </button>
+
+        <div class="reveal-content">
+            <h1 id="greetingTitle">Chúc Mừng Năm Mới</h1>
+            <p class="blessing" id="blessingText">Loading blessings...</p>
+            <div class="fortune-badge" id="fortuneText">Fetching your luck...</div>
         </div>
     </div>
 
-    <div class="footer">
-        <img
-            src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8">
-        <div>
-            <div style="font-weight: bold;">Thầy Nguyễn Thiện Chí</div>
-            <div style="font-size: 0.75rem;">Chúc Trò vạn sự hanh thông!</div>
+    <div class="teacher-footer">
+        <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8"
+            alt="Teacher">
+        <div style="text-align: left">
+            <div style="font-size: 0.9rem; font-weight: bold; color: var(--accent)">Thầy Nguyễn Thiện Chí</div>
+            <div style="font-size: 0.7rem; color: #fff; opacity: 0.8">Senior AI Developer & Educator</div>
         </div>
     </div>
 
     <script>
-        // HỆ THỐNG TẠO 200+ LỜI CHÚC TỰ ĐỘNG
-        const openings = ["Năm mới Bính Ngọ, ", "Xuân 2026 tới rồi, ", "Giao thừa vừa điểm, ", "Khởi đầu chương mới, ", "Tết này, ", "Chào 2026 rực rỡ, "];
-        const closings = [" nhé Trò yêu!", " thành công rực rỡ!", " vạn sự như ý!", " luôn tỏa sáng nhé!", " thật bùng nổ nha!", " hạnh phúc đong đầy!"];
+        /* ADVANCED INTERACTION ENGINE
+        */
 
-        const coreWishes = [
-            // Công nghệ/Tin học
-            "Thầy chúc Trò nâng cấp bản thân lên phiên bản v2026 cực mượt, không lỗi bug nào",
-            "Chúc Trò 'Compile' ước mơ thành công, 'Render' cuộc sống đầy màu sắc",
-            "Thầy mong Trò có tư duy sắc bén như thuật toán tối ưu nhất",
-            "Chúc Trò luôn ở chế độ 'High Performance', năng lượng dồi dào như pin vô tận",
-            "Thầy chúc Trò 'Debug' sạch sẽ mọi nỗi buồn, chỉ giữ lại 'Source Code' niềm vui",
-            "Happy New Year! Wish you stay 'Hungry and Foolish' với đam mê công nghệ",
-            "New year, new goal! Hãy tự viết nên chương trình thành công cho riêng mình",
+        const configs = {
+            cn: {
+                class: 'theme-cn',
+                btn: '🧧 开启福袋 🧧',
+                title: '新年快乐',
+                decors: ['🏮', '🐉'],
+                blessings: ["May your wealth flow like water.", "Success in every venture!"],
+                fortunes: ["Top Tier Luck: Dragon Power!", "Wealth is coming."]
+            },
+            vn: {
+                class: 'theme-vn',
+                btn: '🧧 Khai Xuân 🧧',
+                title: 'Chúc Mừng Năm Mới',
+                decors: ['🎋', '🌸'],
+                blessings: ["Thầy chúc Trò năm mới 2026 code chạy mượt, logic thông suốt!", "Vạn sự hanh thông, triệu điều như ý."],
+                fortunes: ["Quẻ Cát: Vạn Sự Như Ý", "Quẻ Lộc: Công Thành Danh Toại"]
+            },
+            kr: {
+                class: 'theme-kr',
+                btn: '🧧 복주머니 열기 🧧',
+                title: '새해 복 많이 받으세요',
+                decors: ['🪁', '🍲'],
+                blessings: ["May you have a peaceful and healthy year.", "Wishing you great happiness."],
+                fortunes: ["Great Fortune: Bright Future", "Stability and Growth"]
+            },
+            jp: {
+                class: 'theme-jp',
+                btn: '🧧 おみくじを引く 🧧',
+                title: '明けましておめでとう',
+                decors: ['🎍', '⛩️'],
+                blessings: ["A year of fresh beginnings and joy.", "Wishing for your health and prosperity."],
+                fortunes: ["Daikichi (Great Blessing)", "Chukichi (Middle Blessing)"]
+            }
+        };
 
-            // Hán Việt & Ý nghĩa
-            "Thầy chúc Trò 'Mã Đáo Thành Công' - Ngựa về ắt thành công, làm gì cũng thắng",
-            "Chúc Trò 'Tiền Trình Tự Cẩm' - Tương lai tươi sáng và rạng rỡ như gấm vóc",
-            "Thầy mong Trò 'Vạn Sự Hanh Thông' - Mọi việc đều thuận lợi, không chút trở ngại",
-            "Chúc Trò 'Công Thành Danh Toại' - Sự nghiệp học hành đỗ đạt, tiếng thơm vang xa",
-            "Chúc Trò 'Nhất Phàm Phong Thuận' - Mọi cánh buồm đời Trò đều xuôi chiều gió",
+        // Randomly select theme on load
+        const keys = Object.keys(configs);
+        const currentTheme = configs[keys[Math.floor(Math.random() * keys.length)]];
 
-            // Trend & Gen Z
-            "Thầy chúc Trò học hành 'đỉnh nóc kịch trần', nhan sắc 'mãi mận mãi keo'",
-            "Năm mới chúc Trò 'Flex' toàn điểm 10, 'Check-in' tại mọi bảng vàng danh dự",
-            "Thầy mong Trò lúc nào cũng 'Slay', làm chủ mọi 'Vibe' trong cuộc sống",
-            "Chúc Trò năm mới 'Ngoan xinh yêu', bài khó đến mấy cũng giải trong 1 nốt nhạc",
-            "Thầy chúc Trò 2026 không 'Toxic', chỉ toàn 'Logic' và niềm vui"
-        ];
+        document.body.className = currentTheme.class;
+        document.getElementById('btnText').innerText = currentTheme.btn;
+        document.getElementById('greetingTitle').innerText = currentTheme.title;
+        document.getElementById('decorLeft').innerText = currentTheme.decors[0];
+        document.getElementById('decorRight').innerText = currentTheme.decors[1];
 
-        const oracles = [
-            "🔮 Quẻ Excel: Đời Trò năm nay như hàm SUM, cộng dồn toàn may mắn và điểm 10!",
-            "🔮 Quẻ Python: Cuộc sống không 'Syntax Error', mọi dự định đều chạy 'Smooth' từ đầu đến cuối!",
-            "🔮 Quẻ HTML: Trò năm nay là thẻ <h1>, luôn nổi bật và quan trọng nhất!",
-            "🔮 Quẻ Network: Băng thông niềm vui của Trò cực lớn, không bao giờ lo bị 'Lag'!",
-            "🔮 Quẻ Scratch: Các khối lệnh Hạnh Phúc đã khớp, nhấn 'Cờ Xanh' là đời thăng hoa!",
-            "🔮 Quẻ Database: May mắn được 'Insert' liên tục, nỗi buồn bị 'Drop' vĩnh viễn!",
-            "🔮 Quẻ CSS: Trò sẽ được 'Style' lại cuộc đời bằng những màu sắc lung linh nhất!",
-            "🔮 Quẻ AI: Trí tuệ Trò năm nay đột phá, giải toán nhanh hơn cả GPT!",
-            "🔮 Quẻ Security: Mọi điều tiêu cực đều bị 'Firewall' của Trò chặn đứng hoàn toàn!",
-            "🔮 Quẻ Phần cứng: Sức khỏe Trò bền bỉ như ổ cứng SSD, chạy cực nhanh và ổn định!",
-            "🔮 Quẻ Cổng Logic: Năm nay Trò đi qua cổng AND (Học giỏi VÀ Nhiều tiền)!",
-            "🔮 Quẻ Thuật toán: Trình độ giải quyết vấn đề đạt O(1) - Nghĩa là cực nhanh và gọn!",
-            "🔮 Quẻ Word: Cuộc đời được 'Auto-save' hạnh phúc, không lo bị mất niềm vui!",
-            "🔮 Quẻ Robotics: Trò sẽ vận hành cuộc sống chính xác và hiệu quả như một Robot cao cấp!",
-            "🔮 Quẻ Cloud: Thành công cao như mây, có thể 'truy cập' ở bất cứ nơi đâu!",
-            "🔮 Quẻ Phím tắt: Trò sẽ tìm thấy 'Shortcut' ngắn nhất để chạm tay vào ước mơ!"
-        ];
+        function revealBlessing() {
+            // Logic for reveal
+            const stage = document.getElementById('mainStage');
+            const blessing = currentTheme.blessings[Math.floor(Math.random() * currentTheme.blessings.length)];
+            const fortune = currentTheme.fortunes[Math.floor(Math.random() * currentTheme.fortunes.length)];
 
-        function xemQue() {
-            const card = document.getElementById('ketqua');
-            // Tạo lời chúc ngẫu nhiên từ ma trận
-            const randomOpening = openings[Math.floor(Math.random() * openings.length)];
-            const randomCore = coreWishes[Math.floor(Math.random() * coreWishes.length)];
-            const randomClosing = closings[Math.floor(Math.random() * closings.length)];
+            document.getElementById('blessingText').innerText = blessing;
+            document.getElementById('fortuneText').innerText = fortune;
 
-            const fullWish = randomOpening + randomCore + randomClosing;
-            const randomOracle = oracles[Math.floor(Math.random() * oracles.length)];
-
-            document.getElementById('txtWish').innerText = fullWish;
-            document.getElementById('txtOracle').innerText = randomOracle;
-            card.style.display = 'block';
-            card.scrollIntoView({ behavior: 'smooth' });
+            stage.classList.add('reveal-active');
+            startConfetti();
         }
 
-        // --- Hiệu ứng hoa mai rơi ---
-        const canvas = document.getElementById('flowerCanvas');
+        // Particle System (Confetti/Flowers)
+        const canvas = document.getElementById('fxCanvas');
         const ctx = canvas.getContext('2d');
-        let flowers = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
         window.addEventListener('resize', resize);
         resize();
 
-        class Flower {
-            constructor() { this.init(); }
-            init() {
+        class Particle {
+            constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height - canvas.height;
-                this.size = Math.random() * 8 + 10;
-                this.speed = Math.random() * 2 + 1;
-                this.angle = Math.random() * 360;
-                this.spin = Math.random() * 2 - 1;
-            }
-            draw() {
-                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle * Math.PI / 180);
-                ctx.fillStyle = "#ffd700";
-                for (let i = 0; i < 5; i++) {
-                    ctx.rotate(72 * Math.PI / 180); ctx.beginPath();
-                    ctx.ellipse(0, this.size / 2, this.size / 3, this.size / 2, 0, 0, 2 * Math.PI); ctx.fill();
-                }
-                ctx.beginPath(); ctx.arc(0, 0, this.size / 4, 0, 2 * Math.PI); ctx.fillStyle = "#ff9800"; ctx.fill();
-                ctx.restore();
+                this.size = Math.random() * 15 + 5;
+                this.speed = Math.random() * 3 + 2;
+                this.rotation = Math.random() * 360;
+                this.color = ['#ffd700', '#ff4d4d', '#ffffff'][Math.floor(Math.random() * 3)];
             }
             update() {
-                this.y += this.speed; this.angle += this.spin;
-                if (this.y > canvas.height) this.init();
+                this.y += this.speed;
+                this.rotation += 2;
+                if (this.y > canvas.height) this.y = -20;
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
             }
         }
-        for (let i = 0; i < 35; i++) flowers.push(new Flower());
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            flowers.forEach(f => { f.update(); f.draw(); });
-            requestAnimationFrame(animate);
+
+        function startConfetti() {
+            for (let i = 0; i < 50; i++) particles.push(new Particle());
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(loop);
+            }
+            loop();
         }
-        animate();
+
+        // Continuous falling petals for visual richness
+        setInterval(() => {
+            if (particles.length < 20) particles.push(new Particle());
+        }, 300);
+
     </script>
 </body>
 
