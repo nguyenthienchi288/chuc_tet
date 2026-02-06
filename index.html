@@ -269,6 +269,7 @@
     </footer>
 
     <script>
+        // DANH SÁCH HỌC SINH
         const students = [
             { n: "Nguyễn Trần Diệu Anh", l: "7E" }, { n: "Ngô Trâm Anh", l: "7E" }, { n: "Dương Hoàng Bách", l: "7E" }, { n: "Phan Lê Thái Bình", l: "7E" }, { n: "Lê Hiếu Đạt", l: "7E" }, { n: "La Quốc Đạt", l: "7E" }, { n: "Vũ Hải Đăng", l: "7E" }, { n: "Dương Ánh Dương", l: "7E" }, { n: "Phạm Hữu Duy", l: "7E" }, { n: "Phan Trần Quốc Kiệt", l: "7E" }, { n: "Nguyễn Hoàng Long", l: "7E" }, { n: "Nguyễn Tiến Minh", l: "7E" }, { n: "Nguyễn Tiểu Phát", l: "7E" }, { n: "Trần Nguyễn Hưng Phú", l: "7E" }, { n: "Nguyễn Đỗ Minh Uyên", l: "7E" },
             { n: "Dương Ý An", l: "7F" }, { n: "Hồ Minh Anh", l: "7F" }, { n: "Lê Hoàng Huy", l: "7F" }, { n: "Trần Hữu Khang", l: "7F" }, { n: "Phan Lê Phúc Lộc", l: "7F" }, { n: "Phạm Bình Minh", l: "7F" }, { n: "Nguyễn Ái Nhân", l: "7F" }, { n: "Phan Chí Nhân", l: "7F" }, { n: "Huỳnh Thiện Nhân", l: "7F" }, { n: "Lê Nguyễn Thiên Phúc", l: "7F" }, { n: "Trương Phú Trọng", l: "7F" }, { n: "Lê Phạm Hoàng Yến", l: "7F" },
@@ -290,141 +291,94 @@
         const currentCulture = cultures[Math.floor(Math.random() * cultures.length)];
         document.documentElement.setAttribute('data-theme', currentCulture.id);
 
+        // --- Khởi tạo dữ liệu câu chúc ---
+        const subjects = ["Thầy chúc Trò", "Năm mới chúc Trò", "Thầy mong Trò", "Thầy gửi Trò lời chúc", "Chúc Trò"];
+        const actionsVN = ["học hành tấn tới", "logic thông suốt", "code chạy mượt mà", "thi cử thuận lợi", "tư duy ngày càng sắc bén", "đam mê công nghệ bùng nổ", "đạt nhiều thành tích mới", "luôn tự tin và bản lĩnh"];
+        const itTerms = ["như thuật toán tối ưu", "không bao giờ gặp Bug", "không dính Syntax Error", "debug phát ăn ngay", "chạy nhanh như O(1)", "mạnh mẽ như AI thế hệ mới", "ổn định như hệ điều hành Linux", "mượt như giao diện CSS chuẩn"];
+        const bilingual = ["Happy New Year – Chúc Trò năm mới rực rỡ và thành công!", "New year, new version – Phiên bản Trò 2026 nâng cấp toàn diện!", "Keep learning, keep growing – Học nữa, học mãi, học thông minh!", "Code your dream – Lập trình tương lai theo cách của Trò!"];
+        const chinese = ["新年快乐 (Xīn nián kuài lè – Chúc mừng năm mới)", "学业进步 (Xué yè jìn bù – Học tập tiến bộ)", "万事 như ý (Wàn shì rú yì – Vạn sự như ý)", "前程似锦 (Qián chéng sì jǐn – Tương lai rực rỡ)"];
+        const trends = ["học là phải slay 💅", "đỉnh nóc kịch trần bay phấp phới 🚀", "vibe học tập luôn on top 🔥", "học không áp lực, áp lực không học 😄", "code ít bug, điểm nhiều A+"];
+
+        const wishes = [];
+        subjects.forEach(s => actionsVN.forEach(a => itTerms.forEach(i => wishes.push(`${s} ${a}, ${i}.`))));
+        bilingual.forEach(b => wishes.push("🌏 " + b));
+        chinese.forEach(c => wishes.push("🀄 " + c));
+        trends.forEach(t => wishes.push("🔥 Năm mới chúc Trò " + t + "!"));
+
+        const oracles = [
+            "🔮 Quẻ Excel: Hàm SUM may mắn cộng dồn cả năm!",
+            "🔮 Quẻ Python: Cuộc sống chạy mượt, không lỗi Runtime.",
+            "🔮 Quẻ C++: Kiên trì như vòng lặp while – chưa xong là chưa dừng!",
+            "🔮 Quẻ Network: Kết nối thầy – trò ổn định, không bao giờ timeout.",
+            "🔮 Quẻ AI: Trí tuệ nhân tạo – trí tuệ Trò năm nay tăng theo cấp số nhân!",
+            "🔮 Quẻ Database: Kiến thức lưu bền vững, không bao giờ bị mất dữ liệu."
+        ];
+
         function handleOpen() {
-            // Phát nhạc ngay khi nhấn nút
             const audio = document.getElementById('tetMusic');
-            audio.play().catch(e => console.log("Yêu cầu tương tác trước khi phát nhạc"));
+            if (audio) {
+                audio.play().catch(e => console.log("Yêu cầu tương tác người dùng để phát nhạc"));
+            }
 
             const student = students[Math.floor(Math.random() * students.length)];
             const card = document.getElementById('wishCard');
-            document.getElementById('btnMain').style.display = 'none';
-            card.style.display = 'block';
+            const btn = document.getElementById('btnMain');
+
+            if (btn) btn.style.display = 'none';
+            if (card) card.style.display = 'block';
 
             document.getElementById('txtHeader').innerText = currentCulture.greeting;
+            document.getElementById('txtWish').innerText = wishes[Math.floor(Math.random() * wishes.length)];
+            document.getElementById('txtOracle').innerText = oracles[Math.floor(Math.random() * oracles.length)];
 
-            // Random lời chúc và quẻ
-            // ====== NGUYÊN LIỆU ======
-            const subjects = [
-                "Thầy chúc Trò",
-                "Năm mới chúc Trò",
-                "Thầy mong Trò",
-                "Thầy gửi Trò lời chúc",
-                "Chúc Trò",
-            ];
+            // Cập nhật tên bạn bè
+            const friendSpan = document.getElementById('txtFriendName');
+            if (friendSpan) friendSpan.innerText = `${student.n} - Lớp ${student.l}`;
+        }
 
-            const actionsVN = [
-                "học hành tấn tới",
-                "logic thông suốt",
-                "code chạy mượt mà",
-                "thi cử thuận lợi",
-                "tư duy ngày càng sắc bén",
-                "đam mê công nghệ bùng nổ",
-                "đạt nhiều thành tích mới",
-                "luôn tự tin và bản lĩnh",
-            ];
-
-            const itTerms = [
-                "như thuật toán tối ưu",
-                "không bao giờ gặp Bug",
-                "không dính Syntax Error",
-                "debug phát ăn ngay",
-                "chạy nhanh như O(1)",
-                "mạnh mẽ như AI thế hệ mới",
-                "ổn định như hệ điều hành Linux",
-                "mượt như giao diện CSS chuẩn",
-            ];
-
-            // Song ngữ Anh – Việt
-            const bilingual = [
-                "Happy New Year – Chúc Trò năm mới rực rỡ và thành công!",
-                "New year, new version – Phiên bản Trò 2026 nâng cấp toàn diện!",
-                "Keep learning, keep growing – Học nữa, học mãi, học thông minh!",
-                "Code your dream – Lập trình tương lai theo cách của Trò!",
-            ];
-
-            // Tiếng Trung (kèm giải thích)
-            const chinese = [
-                "新年快乐 (Xīn nián kuài lè – Chúc mừng năm mới)",
-                "学业进步 (Xué yè jìn bù – Học tập tiến bộ)",
-                "万事如意 (Wàn shì rú yì – Vạn sự như ý)",
-                "前程似锦 (Qián chéng sì jǐn – Tương lai rực rỡ)",
-            ];
-
-            // Trend mạng xã hội
-            const trends = [
-                "học là phải slay 💅",
-                "đỉnh nóc kịch trần bay phấp phới 🚀",
-                "vibe học tập luôn on top 🔥",
-                "học không áp lực, áp lực không học 😄",
-                "code ít bug, điểm nhiều A+",
-                "chăm chỉ một chút, thành công một đời",
-            ];
-
-            // ====== SINH CÂU CHÚC ======
-            const wishes = [];
-
-            // Tiếng Việt + IT
-            subjects.forEach(s =>
-                actionsVN.forEach(a =>
-                    itTerms.forEach(i =>
-                        wishes.push(`${s} ${a}, ${i}.`)
-                    )
-                )
-            );
-
-            // Song ngữ
-            bilingual.forEach(b => wishes.push("🌏 " + b));
-
-            // Trung + giải thích
-            chinese.forEach(c => wishes.push("🀄 " + c));
-
-            // Trend
-            trends.forEach(t => wishes.push("🔥 Năm mới chúc Trò " + t + "!"));
-
-            console.log("Tổng số câu chúc:", wishes.length); // > 200
-
-
-            // ====== QUẺ BÓI ======
-            const oracles = [
-                "🔮 Quẻ Excel: Hàm SUM may mắn cộng dồn cả năm!",
-                "🔮 Quẻ Python: Cuộc sống chạy mượt, không lỗi Runtime.",
-                "🔮 Quẻ C++: Kiên trì như vòng lặp while – chưa xong là chưa dừng!",
-                "🔮 Quẻ Network: Kết nối thầy – trò ổn định, không bao giờ timeout.",
-                "🔮 Quẻ AI: Trí tuệ nhân tạo – trí tuệ Trò năm nay tăng theo cấp số nhân!",
-                "🔮 Quẻ Database: Kiến thức lưu bền vững, không bao giờ bị mất dữ liệu.",
-            ];
-
-
-            // --- Canvas Hoa Rơi ---
-            const canvas = document.getElementById('visualCanvas');
+        // --- Canvas Hoa Rơi (Đưa ra ngoài hàm handleOpen để chạy ngay khi load) ---
+        const canvas = document.getElementById('visualCanvas');
+        if (canvas) {
             const ctx = canvas.getContext('2d');
             let particles = [];
             function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-            window.addEventListener('resize', resize); resize();
+            window.addEventListener('resize', resize);
+            resize();
 
             class Particle {
                 constructor() {
-                    this.x = Math.random() * canvas.width;
+                    this.reset();
                     this.y = Math.random() * canvas.height;
+                }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = -10;
                     this.size = Math.random() * 5 + 3;
                     this.speedY = Math.random() * 1.5 + 0.5;
+                    this.wind = Math.random() * 0.5 - 0.25;
                 }
                 draw() {
-                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'vn' || document.documentElement.getAttribute('data-theme') === 'cn') ? '#ffd700' : '#ffb7c5';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = (currentCulture.id === 'vn' || currentCulture.id === 'cn') ? '#ffd700' : '#ffb7c5';
                     ctx.fill();
                 }
                 update() {
-                    this.y += this.speedY; if (this.y > canvas.height) this.y = -10;
+                    this.y += this.speedY;
+                    this.x += this.wind;
+                    if (this.y > canvas.height) this.reset();
                 }
             }
+
             for (let i = 0; i < 40; i++) particles.push(new Particle());
+
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 particles.forEach(p => { p.update(); p.draw(); });
                 requestAnimationFrame(animate);
             }
             animate();
+        }
     </script>
 </body>
 
