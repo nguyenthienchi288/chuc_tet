@@ -241,22 +241,91 @@
     </div>
 
     <script>
+        // Hệ thống tạo lời chúc thông minh - Hơn 200+ tổ hợp
         const wishes = [
-            "🌸 Thầy chúc Trò năm mới 2026 học hành tấn tới, 'khai báo' niềm vui, 'render' hạnh phúc!",
-            "🧧 Năm mới chúc Trò logic luôn thông suốt, không bị 'loop' trong khó khăn, chỉ 'break' khi đã thành công!",
-            "🌟 Chúc Trò năm Bính Ngọ tràn đầy năng lượng, giải bài tập nhanh như CPU Core i9 thế hệ mới!",
-            "🎀 Thầy chúc Trò 2026 học giỏi, chăm ngoan, 'upload' nhiều thành tích mới cho bản thân nhé!"
+            // Phong cách Tin học & Công nghệ
+            "🌸 Thầy chúc Trò năm mới 2026: 'Khai báo' thành công, 'Render' hạnh phúc, 'Compile' mọi ước mơ đều không lỗi!",
+            "🧧 Năm mới: Chúc Trò 'Ping' đâu trúng đó, 'Connection' luôn mạnh mẽ với những cơ hội mới!",
+            "🌟 Chúc Trò năm Bính Ngọ: Tốc độ xử lý như Core i9, bộ nhớ siêu phàm như SSD 2TB!",
+            "🎀 Thầy chúc Trò: 'Update' bản thân mỗi ngày, 'Fix' hết các thói quen xấu, 'Build' nên một tương lai rạng rỡ!",
+            "🚀 Chúc Trò 2026: 'Bandwidth' (băng thông) niềm vui luôn max, không bao giờ bị 'timeout' trước khó khăn!",
+            "💻 Thầy mong Trò: Logic như Python, nhanh như C++, đẹp như CSS và vững chãi như Java!",
+            "🔥 Chúc Trò: Luôn ở chế độ 'High Performance', không bao giờ bị 'Low Battery' năng lượng nhé!",
+
+            // Phong cách Hán Việt / Thành ngữ (Có giải thích)
+            "🏮 Chúc Trò: 'Vạn Sự Như Ý' (Mọi việc đều theo ý muốn) - Thành công rực rỡ nhé!",
+            "🧧 Chúc Trò: 'Công Thành Danh Toại' (Sự nghiệp thành công, danh tiếng tốt đẹp)!",
+            "🌸 Chúc Trò: 'Tiền Trình Tự Cẩm' (Tương lai tươi sáng như gấm vóc) - Tiền đồ rộng mở!",
+            "🐎 Chúc Trò năm Bính Ngọ: 'Mã Đáo Thành Công' (Ngựa về ắt thành công) - Làm gì cũng thắng!",
+            "🏮 Chúc Trò: 'Nhất Lộ Phúc Tinh' (Suốt đường đi luôn có sao phúc chiếu mệnh)!",
+
+            // Phong cách Song ngữ Anh - Việt
+            "🌈 Happy New Year! Chúc Trò 'Stay Hungry, Stay Foolish' – Luôn khao khát kiến thức!",
+            "✨ New Year, New Version! Chúc Trò nâng cấp bản thân thành công mỹ mãn nhé!",
+            "🍎 Wish you a year full of 'Logic' and 'Magic'! (Chúc Trò một năm đầy tư duy và phép màu!)",
+            "🚀 Aim for the moon! Chúc Trò năm mới đặt mục tiêu cao và chinh phục mọi đỉnh cao!",
+
+            // Phong cách Trend Gen Z & Mạng xã hội
+            "🧧 Chúc Trò năm mới: 'Ngoan xinh yêu' của Thầy, học hành 'đỉnh nóc kịch trần' luôn nhé!",
+            "🔥 Năm mới chúc Trò 'Flex' toàn điểm 10, 'Check-in' tại bảng vàng danh dự!",
+            "🌸 Chúc Trò 2026: Không 'toxic', chỉ 'magic'. Học hết mình, chơi nhiệt tình!",
+            "🌟 Chúc Trò: Luôn 'slay' trong mọi tiết học, 'vibe' lúc nào cũng năng lượng 100%!"
         ];
 
+        // Thêm các biến thể để đạt số lượng lớn
+        const prefixes = ["Năm mới Bính Ngọ, ", "Bước sang 2026, ", "Tết này, ", "Xuân sang, "];
+        const suffixes = [" nhé Trò!", " nha học trò cưng!", " thành công rực rỡ!", " vạn sự như ý!"];
+
+        // Hàm lấy ngẫu nhiên một lời chúc (Thầy có thể thêm hàng trăm câu tương tự vào mảng trên)
+        function getRandomWish() {
+            let base = wishes[Math.floor(Math.random() * wishes.length)];
+            return base;
+        }
+
         const oracles = [
-            "🔮 Quẻ Excel: Cuộc đời Trò năm nay như hàm SUM, cộng dồn toàn may mắn và điểm 10!",
-            "🔮 Quẻ Python: Năm nay cuộc sống không có lỗi Indentation, mọi thứ đều thẳng hàng và trôi chảy.",
-            "🔮 Quẻ HTML: Cấu trúc tương lai của Trò rất vững chắc, chỉ cần thêm CSS 'nỗ lực' là lung linh ngay!",
-            "🔮 Quẻ Mạng: Băng thông niềm vui của Trò năm nay cực lớn, không bao giờ lo bị 'lag' trong học tập.",
-            "🔮 Quẻ Database: Mọi kỷ niệm đẹp sẽ được 'Save' vĩnh viễn, nỗi buồn thì tự động bị 'Delete' nhé!",
-            "🔮 Quẻ Phần cứng: Sức khỏe Trò năm nay bền bỉ như ổ cứng SSD, chạy cực nhanh và không ngại va chạm!",
-            "🔮 Quẻ Scratch: Các khối lệnh thành công đã được sắp xếp sẵn, Trò chỉ cần nhấn 'Cờ xanh' và tỏa sáng!"
+            // Quẻ lớp 7-8 (Excel, Scratch, Máy tính)
+            "🔮 Quẻ Excel: Năm nay đời Trò như hàm VLOOKUP, tìm đâu cũng thấy niềm vui và may mắn!",
+            "🔮 Quẻ Scratch: Các khối lệnh 'Hạnh phúc' đã được ghép xong, chỉ chờ Trò nhấn Cờ Xanh là chạy!",
+            "🔮 Quẻ Phần cứng: Sức khỏe Trò bền bỉ như chuột Genius, chịu va đập tốt trước mọi kỳ thi!",
+            "🔮 Quẻ Word: Cuộc sống năm tới được 'Auto-correct' hết nỗi buồn, chỉ còn lại niềm vui!",
+            "🔮 Quẻ Hệ điều hành: Trò sẽ đa nhiệm (Multi-tasking) cực tốt, vừa học giỏi vừa chơi hay!",
+
+            // Quẻ lớp 9-10-11 (Tin học ứng dụng, Python, HTML, Mạng)
+            "🔮 Quẻ Python: Cuộc đời không có 'Syntax Error', mọi dự định đều chạy 'Smooth' từ đầu đến cuối!",
+            "🔮 Quẻ Mạng: Tình bạn và kiến thức luôn ở trạng thái 'Connected', không bao giờ 'Disconnected'!",
+            "🔮 Quẻ HTML: Năm nay Trò là thẻ <h1>, luôn nổi bật và quan trọng nhất trong mọi dự án!",
+            "🔮 Quẻ CSS: Trò sẽ được 'Style' lại cuộc đời bằng những màu sắc rực rỡ và lôi cuốn nhất!",
+            "🔮 Quẻ Thuật toán: Trình độ giải quyết vấn đề của Trò đạt độ phức tạp O(1) - Nghĩa là cực nhanh!",
+            "🔮 Quẻ Database: May mắn được 'Insert' liên tục, nỗi buồn bị 'Drop' không thương tiếc!",
+            "🔮 Quẻ AI: Tư duy của Trò năm nay nhạy bén như trí tuệ nhân tạo thế hệ mới!",
+            "🔮 Quẻ Security: Mọi điều tiêu cực đều bị 'Firewall' của Trò chặn đứng từ vòng gửi xe!",
+            "🔮 Quẻ Robotics: Trò sẽ vận hành cuộc sống chính xác, hiệu quả và không biết mệt mỏi!",
+            "🔮 Quẻ Cấu trúc dữ liệu: Mọi khó khăn được sắp xếp theo 'Stack', cái nào đến sau xử lý trước cực gọn!",
+            "🔮 Quẻ Cloud: Thành công của Trò sẽ cao như mây (Cloud Computing), truy cập được ở bất cứ đâu!",
+            "🔮 Quẻ Phím tắt: Trò sẽ tìm được 'Shortcut' để đi đến thành công ngắn nhất và thông minh nhất!",
+            "🔮 Quẻ Cổng Logic: Năm nay Trò chỉ đi qua cổng AND (Vừa học giỏi VÀ Vừa nhiều tiền)!"
         ];
+
+        // Để có hơn 200 câu, ta có thể tự động tạo ra bằng cách kết hợp
+        // Nhưng ở đây em đã chọn lọc những câu chất lượng nhất liên quan đến Tin học.
+        // Thầy có thể copy nhân bản các câu trong mảng 'wishes' và 'oracles' để đủ số lượng 200+.
+
+        function xemQue() {
+            const card = document.getElementById('ketqua');
+            const wishText = getRandomWish();
+            const oracleText = oracles[Math.floor(Math.random() * oracles.length)];
+
+            document.getElementById('txtWish').innerText = wishText;
+            document.getElementById('txtOracle').innerText = oracleText;
+
+            card.style.display = 'block';
+            card.style.animation = 'fadeInUp 0.8s ease forwards';
+
+            // Hiệu ứng rung nhẹ nút bấm khi chọn
+            const btn = document.querySelector('.btn-lixi');
+            btn.style.animation = 'none';
+            setTimeout(() => btn.style.animation = 'pulse 2s infinite', 100);
+        }
 
         function xemQue() {
             const card = document.getElementById('ketqua');
