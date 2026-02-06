@@ -19,13 +19,12 @@
             --font-title: 'Dancing Script', cursive;
         }
 
-        /* Themes Culture - Tối ưu hiển thị */
+        /* Themes Culture - Tối ưu hiển thị cho từng quốc gia */
         [data-theme="vn"] {
             --primary: #b71c1c;
             --secondary: #ffeb3b;
             --accent: #2e7d32;
             --pattern: url('https://www.transparenttextures.com/patterns/natural-paper.png');
-            --card-text: #1a1a1a;
         }
 
         [data-theme="cn"] {
@@ -34,7 +33,6 @@
             --accent: #004d40;
             --font-title: 'ZCOOL XiaoWei', serif;
             --pattern: url('https://www.transparenttextures.com/patterns/exclusive-paper.png');
-            --card-text: #1a1a1a;
         }
 
         [data-theme="kr"] {
@@ -43,7 +41,6 @@
             --accent: #fbc02d;
             --font-title: 'Noto Serif KR', serif;
             --pattern: url('https://www.transparenttextures.com/patterns/fancy-pants.png');
-            --card-text: #1a1a1a;
         }
 
         [data-theme="jp"] {
@@ -51,9 +48,8 @@
             --secondary: #bc002d;
             --accent: #1b5e20;
             --font-title: 'Noto Serif JP', serif;
-            --pattern: url('https://www.transparenttextures.com/patterns/shippo.png');
-            --card-text: #212121;
             --ink: #212121;
+            --pattern: url('https://www.transparenttextures.com/patterns/shippo.png');
         }
 
         body {
@@ -117,20 +113,6 @@
             animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1)
-            }
-
-            50% {
-                transform: scale(1.05)
-            }
-
-            100% {
-                transform: scale(1)
-            }
-        }
-
         .wish-card {
             display: none;
             width: 100%;
@@ -143,34 +125,27 @@
             border-radius: 20px;
             text-align: center;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            animation: slideUp 0.8s ease forwards;
         }
 
         .header-greeting {
             font-family: var(--font-title);
-            font-size: 2.2rem;
-            color: var(--secondary);
-            background: var(--primary);
-            -webkit-background-clip: text;
-            padding: 10px;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .header-greeting small {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            display: block;
+            margin-top: 5px;
         }
 
         .wish-content {
             font-size: 1.15rem;
-            color: var(--card-text);
+            color: #333;
             margin-bottom: 15px;
             font-weight: 500;
             line-height: 1.6;
@@ -187,7 +162,6 @@
             margin-bottom: 15px;
         }
 
-        /* Sửa lỗi xuống dòng Tên */
         .random-friend {
             background: linear-gradient(to right, transparent, #fff3e0, transparent);
             border-top: 1px dashed #e65100;
@@ -195,16 +169,12 @@
             color: #e65100;
             font-weight: bold;
             font-size: 0.95rem;
-            line-height: 1.4;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .student-name {
-            display: inline-block;
             white-space: nowrap;
             color: #b71c1c;
-            text-decoration: underline;
+            border-bottom: 2px solid #ffca28;
         }
 
         .footer-branding {
@@ -215,7 +185,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             border-top: 2px solid var(--secondary);
         }
 
@@ -227,15 +197,35 @@
             object-fit: cover;
         }
 
-        .teacher-info {
-            color: var(--secondary);
-            text-align: left;
+        @keyframes pulse {
+            0% {
+                transform: scale(1)
+            }
+
+            50% {
+                transform: scale(1.05)
+            }
+
+            100% {
+                transform: scale(1)
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
         }
     </style>
 </head>
 
 <body>
-
     <div class="silk-overlay"></div>
     <canvas id="visualCanvas"></canvas>
 
@@ -260,16 +250,15 @@
     </main>
 
     <footer class="footer-branding">
-        <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8"
-            alt="Thầy Chí">
-        <div class="teacher-info">
-            <div style="font-weight: bold; font-size: 1rem;">Thầy Nguyễn Thiện Chí</div>
-            <div style="font-size: 0.75rem; opacity: 0.9;">Chúc Trò vạn sự hanh thông!</div>
+        <img
+            src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8">
+        <div style="color: var(--secondary)">
+            <div style="font-weight: bold;">Thầy Nguyễn Thiện Chí</div>
+            <div style="font-size: 0.75rem;">Chúc Trò vạn sự hanh thông!</div>
         </div>
     </footer>
 
     <script>
-        // DANH SÁCH HỌC SINH
         const students = [
             { n: "Nguyễn Trần Diệu Anh", l: "7E" }, { n: "Ngô Trâm Anh", l: "7E" }, { n: "Dương Hoàng Bách", l: "7E" }, { n: "Phan Lê Thái Bình", l: "7E" }, { n: "Lê Hiếu Đạt", l: "7E" }, { n: "La Quốc Đạt", l: "7E" }, { n: "Vũ Hải Đăng", l: "7E" }, { n: "Dương Ánh Dương", l: "7E" }, { n: "Phạm Hữu Duy", l: "7E" }, { n: "Phan Trần Quốc Kiệt", l: "7E" }, { n: "Nguyễn Hoàng Long", l: "7E" }, { n: "Nguyễn Tiến Minh", l: "7E" }, { n: "Nguyễn Tiểu Phát", l: "7E" }, { n: "Trần Nguyễn Hưng Phú", l: "7E" }, { n: "Nguyễn Đỗ Minh Uyên", l: "7E" },
             { n: "Dương Ý An", l: "7F" }, { n: "Hồ Minh Anh", l: "7F" }, { n: "Lê Hoàng Huy", l: "7F" }, { n: "Trần Hữu Khang", l: "7F" }, { n: "Phan Lê Phúc Lộc", l: "7F" }, { n: "Phạm Bình Minh", l: "7F" }, { n: "Nguyễn Ái Nhân", l: "7F" }, { n: "Phan Chí Nhân", l: "7F" }, { n: "Huỳnh Thiện Nhân", l: "7F" }, { n: "Lê Nguyễn Thiên Phúc", l: "7F" }, { n: "Trương Phú Trọng", l: "7F" }, { n: "Lê Phạm Hoàng Yến", l: "7F" },
@@ -283,102 +272,65 @@
 
         const cultures = [
             { id: 'vn', greeting: 'Chúc Mừng Năm Mới 2026' },
-            { id: 'cn', greeting: 'Chúc Mừng Tân Niên (新年快乐)' },
-            { id: 'kr', greeting: 'Chúc Mừng Seollal (새해 복 많이 받으세요)' },
-            { id: 'jp', greeting: 'Chúc Mừng Oshogatsu (あけましておめでとう)' }
+            { id: 'cn', greeting: 'Chúc Mừng Tân Niên<br><small>(新年快乐)</small>' },
+            { id: 'kr', greeting: 'Chúc Mừng Seollal<br><small>(새해 복 많이 받으세요)</small>' },
+            { id: 'jp', greeting: 'Chúc Mừng Oshogatsu<br><small>(あけましておめでとう)</small>' }
         ];
 
         const currentCulture = cultures[Math.floor(Math.random() * cultures.length)];
         document.documentElement.setAttribute('data-theme', currentCulture.id);
 
-        // --- Khởi tạo dữ liệu câu chúc ---
-        const subjects = ["Thầy chúc Trò", "Năm mới chúc Trò", "Thầy mong Trò", "Thầy gửi Trò lời chúc", "Chúc Trò"];
-        const actionsVN = ["học hành tấn tới", "logic thông suốt", "code chạy mượt mà", "thi cử thuận lợi", "tư duy ngày càng sắc bén", "đam mê công nghệ bùng nổ", "đạt nhiều thành tích mới", "luôn tự tin và bản lĩnh"];
-        const itTerms = ["như thuật toán tối ưu", "không bao giờ gặp Bug", "không dính Syntax Error", "debug phát ăn ngay", "chạy nhanh như O(1)", "mạnh mẽ như AI thế hệ mới", "ổn định như hệ điều hành Linux", "mượt như giao diện CSS chuẩn"];
-        const bilingual = ["Happy New Year – Chúc Trò năm mới rực rỡ và thành công!", "New year, new version – Phiên bản Trò 2026 nâng cấp toàn diện!", "Keep learning, keep growing – Học nữa, học mãi, học thông minh!", "Code your dream – Lập trình tương lai theo cách của Trò!"];
-        const chinese = ["新年快乐 (Xīn nián kuài lè – Chúc mừng năm mới)", "学业进步 (Xué yè jìn bù – Học tập tiến bộ)", "万事 như ý (Wàn shì rú yì – Vạn sự như ý)", "前程似锦 (Qián chéng sì jǐn – Tương lai rực rỡ)"];
-        const trends = ["học là phải slay 💅", "đỉnh nóc kịch trần bay phấp phới 🚀", "vibe học tập luôn on top 🔥", "học không áp lực, áp lực không học 😄", "code ít bug, điểm nhiều A+"];
-
-        const wishes = [];
-        subjects.forEach(s => actionsVN.forEach(a => itTerms.forEach(i => wishes.push(`${s} ${a}, ${i}.`))));
-        bilingual.forEach(b => wishes.push("🌏 " + b));
-        chinese.forEach(c => wishes.push("🀄 " + c));
-        trends.forEach(t => wishes.push("🔥 Năm mới chúc Trò " + t + "!"));
-
-        const oracles = [
-            "🔮 Quẻ Excel: Hàm SUM may mắn cộng dồn cả năm!",
-            "🔮 Quẻ Python: Cuộc sống chạy mượt, không lỗi Runtime.",
-            "🔮 Quẻ C++: Kiên trì như vòng lặp while – chưa xong là chưa dừng!",
-            "🔮 Quẻ Network: Kết nối thầy – trò ổn định, không bao giờ timeout.",
-            "🔮 Quẻ AI: Trí tuệ nhân tạo – trí tuệ Trò năm nay tăng theo cấp số nhân!",
-            "🔮 Quẻ Database: Kiến thức lưu bền vững, không bao giờ bị mất dữ liệu."
-        ];
-
         function handleOpen() {
             const audio = document.getElementById('tetMusic');
-            if (audio) {
-                audio.play().catch(e => console.log("Yêu cầu tương tác người dùng để phát nhạc"));
-            }
+            audio.play().catch(() => console.log("Cần tương tác để phát nhạc"));
 
             const student = students[Math.floor(Math.random() * students.length)];
-            const card = document.getElementById('wishCard');
             const btn = document.getElementById('btnMain');
+            const card = document.getElementById('wishCard');
 
-            if (btn) btn.style.display = 'none';
-            if (card) card.style.display = 'block';
+            btn.style.display = 'none';
+            card.style.display = 'block';
 
-            document.getElementById('txtHeader').innerText = currentCulture.greeting;
-            document.getElementById('txtWish').innerText = wishes[Math.floor(Math.random() * wishes.length)];
+            document.getElementById('txtHeader').innerHTML = currentCulture.greeting;
+            document.getElementById('txtFriendName').innerText = `${student.n} - Lớp ${student.l}`;
+
+            // Dữ liệu câu chúc & quẻ
+            const subjects = ["Thầy chúc Trò", "Năm mới chúc Trò", "Thầy mong Trò", "Thầy gửi Trò lời chúc", "Chúc Trò"];
+            const actions = ["học hành tấn tới", "logic thông suốt", "code chạy mượt mà", "thi cử thuận lợi", "tư duy sắc bén"];
+            const itTerms = ["như thuật toán tối ưu", "không dính Bug", "chạy nhanh như O(1)", "mượt như CSS chuẩn"];
+            const trends = ["học là phải slay 💅", "đỉnh nóc kịch trần 🚀", "vibe luôn on top 🔥"];
+
+            const wishList = [];
+            subjects.forEach(s => actions.forEach(a => itTerms.forEach(i => wishList.push(`${s} ${a}, ${i}.`))));
+            trends.forEach(t => wishList.push(`🔥 Năm mới chúc Trò ${t}!`));
+
+            const oracles = ["🔮 Quẻ Excel: May mắn cộng dồn cả năm!", "🔮 Quẻ Python: Cuộc sống chạy mượt, không lỗi.", "🔮 Quẻ AI: Trí tuệ tăng theo cấp số nhân!"];
+
+            document.getElementById('txtWish').innerText = wishList[Math.floor(Math.random() * wishList.length)];
             document.getElementById('txtOracle').innerText = oracles[Math.floor(Math.random() * oracles.length)];
-
-            // Cập nhật tên bạn bè
-            const friendSpan = document.getElementById('txtFriendName');
-            if (friendSpan) friendSpan.innerText = `${student.n} - Lớp ${student.l}`;
         }
 
-        // --- Canvas Hoa Rơi (Đưa ra ngoài hàm handleOpen để chạy ngay khi load) ---
+        // --- Canvas Hoa Rơi ---
         const canvas = document.getElementById('visualCanvas');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-            window.addEventListener('resize', resize);
-            resize();
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
 
-            class Particle {
-                constructor() {
-                    this.reset();
-                    this.y = Math.random() * canvas.height;
-                }
-                reset() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = -10;
-                    this.size = Math.random() * 5 + 3;
-                    this.speedY = Math.random() * 1.5 + 0.5;
-                    this.wind = Math.random() * 0.5 - 0.25;
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = (currentCulture.id === 'vn' || currentCulture.id === 'cn') ? '#ffd700' : '#ffb7c5';
-                    ctx.fill();
-                }
-                update() {
-                    this.y += this.speedY;
-                    this.x += this.wind;
-                    if (this.y > canvas.height) this.reset();
-                }
+        class Particle {
+            constructor() { this.reset(); this.y = Math.random() * canvas.height; }
+            reset() { this.x = Math.random() * canvas.width; this.y = -10; this.size = Math.random() * 5 + 3; this.speed = Math.random() * 1.5 + 0.5; }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = (currentCulture.id === 'vn' || currentCulture.id === 'cn') ? '#ffd700' : '#ffb7c5';
+                ctx.fill();
             }
-
-            for (let i = 0; i < 40; i++) particles.push(new Particle());
-
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => { p.update(); p.draw(); });
-                requestAnimationFrame(animate);
-            }
-            animate();
+            update() { this.y += this.speed; if (this.y > canvas.height) this.reset(); }
         }
+
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        animate();
     </script>
 </body>
 
