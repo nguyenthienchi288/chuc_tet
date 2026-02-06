@@ -366,7 +366,36 @@
             subjects.forEach(s => actions.forEach(a => itTerms.forEach(i => wishList.push(`${s} ${a}, ${i}.`))));
             trends.forEach(t => wishList.push(`🔥 Năm mới chúc Trò ${t}!`));
 
-            const oracles = ["🔮 Quẻ Excel: May mắn cộng dồn cả năm!", "🔮 Quẻ Python: Cuộc sống chạy mượt, không lỗi.", "🔮 Quẻ AI: Trí tuệ tăng theo cấp số nhân!"];
+            const oracles = [
+                // Nhóm Văn phòng & Cơ bản (Lớp 7-8)
+                "🔮 Quẻ Excel: Cuộc đời Trò năm nay như hàm SUM, bao nhiêu may mắn và điểm 10 đều được cộng dồn tất cả!",
+                "🔮 Quẻ Word: Mọi dự định trong năm mới đều được 'Auto-save', không bao giờ lo mất công sức!",
+                "🔮 Quẻ PowerPoint: Năm nay Trò sẽ tỏa sáng với các hiệu ứng 'Transition' cuộc đời vô cùng rực rỡ!",
+                "🔮 Quẻ Sơ đồ tư duy: Tư duy của Trò sẽ mạch lạc như một Mindmap, nhìn đâu cũng thấy hướng giải quyết!",
+                "🔮 Quẻ Scratch: Các khối lệnh Hạnh Phúc đã được lập trình sẵn, chỉ chờ Trò nhấn nút 'Cờ Xanh' là thăng hoa!",
+
+                // Nhóm Mạng & Phần cứng (Lớp 7-9)
+                "🔮 Quẻ Mạng: Băng thông niềm vui của Trò năm nay cực lớn, kết nối bạn bè luôn ở trạng thái 'Connected'!",
+                "🔮 Quẻ Phần cứng: Sức khỏe Trò bền bỉ như ổ cứng SSD, chạy cực nhanh và không ngại va chạm!",
+                "🔮 Quẻ Hệ điều hành: Trò sẽ đa nhiệm (Multi-tasking) cực tốt, vừa học giỏi vừa chơi hay mà không bị 'Lag'!",
+                "🔮 Quẻ Bảo mật: Mọi điều tiêu cực đều bị 'Firewall' của Trò chặn đứng từ vòng gửi xe!",
+
+                // Nhóm Thiết kế & Lập trình (Lớp 9-10)
+                "🔮 Quẻ HTML: Trò năm nay chính là thẻ <h1>, luôn là tiêu đề quan trọng và nổi bật nhất trong mọi cuộc chơi!",
+                "🔮 Quẻ CSS: Cuộc sống của Trò sẽ được 'Style' lại bằng những gam màu rực rỡ và lôi cuốn nhất!",
+                "🔮 Quẻ Python: Năm nay cuộc đời không có 'Syntax Error', mọi dự định đều chạy 'Smooth' từ đầu đến cuối!",
+                "🔮 Quẻ Biến số: Niềm vui của Trò là biến toàn cục (Global Variable), ở đâu cũng thấy, lúc nào cũng có!",
+                "🔮 Quẻ Vòng lặp: May mắn sẽ rơi vào vòng lặp 'While True' – lặp lại mãi mãi không có điểm dừng!",
+
+                // Nhóm Thuật toán & AI (Lớp 11 & Nâng cao)
+                "🔮 Quẻ AI: Trí tuệ của Trò năm nay đột phá như mô hình GPT-5, giải bài tập nhanh hơn cả tốc độ ánh sáng!",
+                "🔮 Quẻ Database: Mọi kỷ niệm đẹp sẽ được 'Insert' liên tục, còn nỗi buồn thì tự động bị 'Drop' vĩnh viễn!",
+                "🔮 Quẻ Cấu trúc dữ liệu: Khó khăn được sắp xếp theo kiểu Ngăn xếp (Stack), cái nào đến sau xử lý trước cực gọn!",
+                "🔮 Quẻ Thuật toán: Trình độ giải quyết vấn đề đạt độ phức tạp O(1), nhìn đề là biết đáp án ngay lập tức!",
+                "🔮 Quẻ Đệ quy: Hạnh phúc sẽ gọi lại chính nó, nhân đôi niềm vui sau mỗi ngày Trò cố gắng!",
+                "🔮 Quẻ Robot: Trò sẽ vận hành cuộc sống chính xác, hiệu quả và luôn đi đúng quỹ đạo thành công!",
+                "🔮 Quẻ Phím tắt: Trò sẽ tìm được 'Shortcut' (đường tắt) thông minh nhất để chạm tay vào ước mơ!"
+            ];
 
             document.getElementById('txtWish').innerText = wishList[Math.floor(Math.random() * wishList.length)];
             document.getElementById('txtOracle').innerText = oracles[Math.floor(Math.random() * oracles.length)];
