@@ -132,7 +132,7 @@
 </head>
 <body>
 
-    <div class="header">Hệ Thống Điểm Danh 6</div>
+    <div class="header">Hệ Thống Điểm Danh 7</div>
 
     <button id="start-btn" onclick="startCamera()">Bật Camera Quét Mã</button>
 
@@ -148,124 +148,164 @@
     <div id="toast-container"></div>
 
 <script>
-        // Dán Link Web App MỚI NHẤT (Vừa Deploy lại) vào đây
+        // --- 1. CẤU HÌNH & BIẾN TOÀN CỤC ---
+
+        // Đường dẫn đến Web App của Google Apps Script dùng để nhận dữ liệu
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyp7ygQrMSOi5gjg_pHBv0al6SVlmnstMvPTcjy2wJd7K6S0XhOtnDD_G4zv4P1gt1ouw/exec";
 
-        let lastScannedText = "";
-        let lastScannedTime = 0;
-        const cooldownTime = 4000; 
+        // Các biến dùng để chống việc quét trùng lặp 1 mã liên tục
+        let lastScannedText = "";     // Lưu lại nội dung của mã QR vừa quét gần nhất
+        let lastScannedTime = 0;      // Lưu lại thời điểm (timestamp) của lần quét gần nhất
+        const cooldownTime = 2000;    // Thời gian chờ bắt buộc (4000ms = 4 giây) trước khi cho phép quét lại CÙNG MỘT mã QR
 
-        // BIẾN TỐI ƯU: Quản lý nhịp quét để giảm tải CPU
-        let lastScanTick = 0;
-        const SCAN_INTERVAL = 150; // Quét 150ms/lần thay vì 60 lần/giây
+        // Các biến dùng để tối ưu hiệu năng (giảm tải CPU)
+        let lastScanTick = 0;         // Lưu lại thời điểm cuối cùng thuật toán nhận diện QR chạy
+        const SCAN_INTERVAL = 150;    // Chỉ cho phép thuật toán tìm QR chạy 150 mili-giây 1 lần (khoảng ~6.5 lần/giây) thay vì chạy liên tục
 
-        // Lấy các phần tử (Sẽ an toàn hơn nếu bạn đặt thẻ <script> này ở cuối thẻ <body>)
-        const video = document.getElementById("video");
-        const canvasElement = document.getElementById("canvas");
+        // --- 2. KẾT NỐI VỚI GIAO DIỆN (DOM) ---
+
+        // Lấy các phần tử HTML để thao tác
+        const video = document.getElementById("video");                 // Thẻ <video> dùng để hiển thị luồng hình ảnh từ camera
+        const canvasElement = document.getElementById("canvas");        // Thẻ <canvas> ẩn dùng để vẽ lại khung hình từ video để xử lý
+        // Lấy ngữ cảnh vẽ 2D của canvas. willReadFrequently: true báo cho trình duyệt biết canvas này sẽ bị đọc dữ liệu liên tục để tối ưu
         const canvas = canvasElement ? canvasElement.getContext("2d", { willReadFrequently: true }) : null;
 
+
+        // --- 3. CÁC HÀM XỬ LÝ ---
+
+        // Hàm hiển thị thông báo nổi (Toast) trên màn hình
         function showToast(message, type = 'info', duration = 3000) {
             const container = document.getElementById('toast-container');
-            if (!container) return; // Bỏ qua nếu không tìm thấy container
+            if (!container) return; // Nếu không tìm thấy chỗ chứa thông báo thì thoát hàm
             
+            // Tạo một thẻ <div> mới để chứa nội dung thông báo
             const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = message;
-            container.appendChild(toast);
+            toast.className = `toast ${type}`; // Thêm class (CSS) để định dạng màu sắc (thành công, lỗi, thông tin)
+            toast.innerHTML = message;         // Gắn nội dung chữ vào
+            container.appendChild(toast);      // Thêm thông báo vào màn hình
 
+            // Tự động làm mờ và xóa thông báo sau một khoảng thời gian (duration)
             setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
+                toast.style.opacity = '0'; // Hiệu ứng mờ dần
+                setTimeout(() => toast.remove(), 300); // Xóa hẳn phần tử khỏi HTML sau khi đã mờ hết
             }, duration);
         }
 
+        // Hàm khởi động Camera
         function startCamera() {
+            // Ẩn nút "Bắt đầu" và hiện khung chứa camera lên
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('camera-wrapper').style.display = 'block';
             document.getElementById('status-card').innerText = "Đang khởi động Camera...";
 
+            // Yêu cầu trình duyệt cấp quyền truy cập camera, ưu tiên camera sau (environment)
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
                 .then(function(stream) {
+                    // Nếu người dùng cho phép, đưa luồng video vào thẻ <video>
                     video.srcObject = stream;
-                    video.setAttribute("playsinline", true); 
-                    video.play();
+                    video.setAttribute("playsinline", true); // Cần thiết để video chạy trực tiếp trên iOS mà không bị phóng to toàn màn hình
+                    video.play(); // Bắt đầu phát video
+                    
+                    // Gọi hàm tick() để bắt đầu vòng lặp xử lý hình ảnh
                     requestAnimationFrame(tick);
                     document.getElementById('status-card').innerText = "Sẵn sàng! Hãy đưa mã QR vào khung.";
                 })
                 .catch(function(err) {
+                    // Xử lý nếu người dùng từ chối quyền hoặc máy không có camera
                     console.error("Lỗi Camera:", err);
                     document.getElementById('status-card').innerText = "Lỗi: Không thể truy cập Camera. Vui lòng kiểm tra quyền.";
-                    document.getElementById('start-btn').style.display = 'block';
+                    document.getElementById('start-btn').style.display = 'block'; // Hiện lại nút bắt đầu
                 });
         }
 
+        // Hàm vòng lặp phân tích hình ảnh (chạy liên tục khi camera mở)
         function tick() {
+            // Kiểm tra xem video đã tải đủ dữ liệu để hiển thị chưa
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                // Điều chỉnh kích thước canvas cho khớp với độ phân giải thực của video
                 canvasElement.hidden = false;
                 canvasElement.height = video.videoHeight;
                 canvasElement.width = video.videoWidth;
                 
+                // Vẽ khung hình hiện tại từ thẻ <video> lên thẻ <canvas>
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
                 
-                // TỐI ƯU THUẬT TOÁN: Chỉ chạy jsQR nếu đã trôi qua khoảng thời gian SCAN_INTERVAL
+                // TỐI ƯU THUẬT TOÁN: Lấy thời gian hiện tại
                 let currentTime = new Date().getTime();
+                // Chỉ chạy thuật toán quét mã nếu khoảng thời gian từ lần quét trước lớn hơn SCAN_INTERVAL (150ms)
                 if (currentTime - lastScanTick >= SCAN_INTERVAL) {
-                    lastScanTick = currentTime;
+                    lastScanTick = currentTime; // Cập nhật lại mốc thời gian quét
                     
+                    // Trích xuất dữ liệu điểm ảnh (pixel) từ canvas
                     var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    
+                    // Dùng thư viện jsQR để tìm và giải mã QR từ đống dữ liệu điểm ảnh đó
                     var code = jsQR(imageData.data, imageData.width, imageData.height, {
-                        inversionAttempts: "dontInvert",
+                        inversionAttempts: "dontInvert", // Không cố gắng đảo ngược màu ảnh để tiết kiệm CPU
                     });
 
+                    // Nếu tìm thấy mã QR (biến code không bị rỗng)
                     if (code) {
-                        onScanSuccess(code.data);
+                        onScanSuccess(code.data); // Chuyển dữ liệu chữ lấy được sang hàm xử lý thành công
                     }
                 }
             }
+            // Gọi lại chính hàm này cho khung hình tiếp theo (tạo thành vòng lặp vô tận trôi chảy)
             requestAnimationFrame(tick);
         }
 
+        // Hàm xử lý khi quét được một mã QR hợp lệ
         function onScanSuccess(decodedText) {
             const currentTime = new Date().getTime();
 
-            // Chống quét trùng lặp liên tục
+            // Chống spam: Nếu mã vừa quét giống y hệt mã trước đó VÀ chưa qua hết thời gian chờ (cooldownTime) thì ngưng hàm ngay, không làm gì cả
             if (decodedText === lastScannedText && (currentTime - lastScannedTime) < cooldownTime) {
                 return;
             }
 
+            // Ghi nhận lại mã và thời gian của lần quét này
             lastScannedText = decodedText;
             lastScannedTime = currentTime;
 
+            // Tạo hiệu ứng nháy sáng (chớp xanh) trên giao diện để báo hiệu quét thành công
             const camWrapper = document.getElementById('camera-wrapper');
             camWrapper.classList.add('scan-success');
-            setTimeout(() => camWrapper.classList.remove('scan-success'), 80); 
+            setTimeout(() => camWrapper.classList.remove('scan-success'), 80); // Xóa hiệu ứng sau 80ms
 
-            showToast(`🔍 Đang xử lý: <b>${decodedText}</b>...`, 'info', 20);
+            // Cập nhật giao diện: Hiện thông báo nổi và đổi chữ trên thẻ trạng thái
+            showToast(`🔍 Đang xử lý: <b>${decodedText}</b>...`, 'info', 1000); // (Lưu ý: 20ms là rất nhanh, nên đổi thành 2000)
             document.getElementById('status-card').innerHTML = `<span style="color: #007bff; font-weight: bold;">Đang gửi dữ liệu:</span> ${decodedText}`;
 
+            // Chuẩn bị dữ liệu để gửi đi dưới dạng form-data
             const params = new URLSearchParams();
-            params.append("qrText", decodedText);
+            params.append("qrText", decodedText); // Gắn nội dung QR vào biến "qrText" để server hiểu
 
+            // Gửi dữ liệu sang Google Sheets (thông qua Web App URL) bằng phương thức POST
             fetch(GAS_WEB_APP_URL, {
                 method: "POST",
                 body: params
             })
-            .then(response => response.json()) 
+            .then(response => response.json()) // Chờ server trả lời và chuyển câu trả lời thành định dạng JSON
             .then(data => {
+                // Kiểm tra xem server có báo lưu thành công không
                 if (data.status === "success") {
-                    showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, 'success', 40);
+                    showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, 'success', 1000); // (Lưu ý: 40ms là rất nhanh, nên đổi thành 4000)
                     document.getElementById('status-card').innerHTML = `<span style="color: #28a745; font-weight: bold;">Đã lưu thành công!</span> Sẵn sàng quét tiếp.`;
                 } else {
+                    // Nếu server báo lỗi (ví dụ file sheet bị xóa, khóa...), ném ra lỗi để nhảy xuống phần .catch
                     throw new Error(data.message || "Lỗi từ phía Server");
                 }
             })
             .catch(error => {
+                // Xử lý khi có lỗi (như mất mạng internet, server lỗi, v.v.)
                 console.error("Lỗi Fetch:", error);
-                showToast(`❌ Lỗi gửi dữ liệu! Xem lại kết nối mạng.`, 'error', 40);
+                showToast(`❌ Lỗi gửi dữ liệu! Xem lại kết nối mạng.`, 'error', 1000);
                 document.getElementById('status-card').innerHTML = `<span style="color: #dc3545; font-weight: bold;">Lỗi kết nối.</span> Vui lòng quét lại.`;
-                lastScannedTime = 0; // Đặt lại để người dùng có thể thử quét ngay
+                
+                // Đặt lại thời gian thành 0 để người dùng không phải chờ hết cooldownTime, có thể thử quét lại ngay lập tức
+                lastScannedTime = 0; 
             });
         }
-    </script>
+</script>
 </body>
 </html>
