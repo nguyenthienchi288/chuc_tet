@@ -3,27 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trình Quét Mã QR (Safari Compatible)</title>
+    <title>Quét QR bằng jsQR (Safari OK)</title>
     
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" type="text/javascript"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f5f5f7;
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            -webkit-font-smoothing: antialiased;
         }
 
         h2 {
             color: #1d1d1f;
             margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: 600;
         }
 
         .container {
@@ -34,21 +31,30 @@
             border-radius: 18px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             box-sizing: border-box;
+            text-align: center;
         }
 
-        /* Khung chứa camera tối ưu cho iOS/Safari */
-        #reader {
+        /* Khung chứa canvas hiển thị camera */
+        #canvas-container {
+            position: relative;
             width: 100%;
             border-radius: 12px;
             overflow: hidden;
-            border: none;
-            background: #000000;
+            background: #000;
+            line-height: 0;
         }
 
-        /* Tùy chỉnh video của Safari không bị tràn viền */
-        #reader video {
-            object-fit: cover !important;
-            border-radius: 12px;
+        canvas {
+            width: 100%;
+            height: auto;
+            transform: scaleX(1); /* Đổi thành -1 nếu muốn lật gương giống camera trước */
+        }
+
+        /* Loading hoặc thông báo chờ */
+        #loading-text {
+            padding: 20px;
+            color: #86868b;
+            font-size: 14px;
         }
 
         /* Khung hiển thị kết quả */
@@ -58,6 +64,7 @@
             background-color: #f2f2f7;
             border-radius: 12px;
             word-wrap: break-word;
+            text-align: left;
             display: none;
         }
 
@@ -67,105 +74,109 @@
             font-size: 13px;
             text-transform: uppercase;
             margin-bottom: 6px;
-            letter-spacing: 0.5px;
         }
 
         #result-text {
             color: #1d1d1f;
             font-size: 16px;
             font-weight: 500;
-            line-height: 1.4;
-        }
-
-        /* Định dạng lại các nút bấm hệ thống tự sinh ra */
-        button {
-            background-color: #0071e3 !important; /* Màu xanh đặc trưng Apple */
-            color: #ffffff !important;
-            border: none !important;
-            padding: 12px 22px !important;
-            font-size: 15px !important;
-            font-weight: 500 !important;
-            border-radius: 8px !important;
-            cursor: pointer !important;
-            margin: 10px 0 !important;
-            width: 100%;
-            transition: background 0.2s ease;
-            -webkit-appearance: none; /* Xóa style mặc định của iOS */
-        }
-        button:active {
-            background-color: #005bb5 !important;
-        }
-        select {
-            width: 100%;
-            padding: 10px !important;
-            border-radius: 8px !important;
-            border: 1px solid #d2d2d7 !important;
-            background-color: #fff !important;
-            font-size: 15px !important;
-            margin-bottom: 12px !important;
-            -webkit-appearance: none;
         }
     </style>
 </head>
 <body>
 
-    <h2>Máy Quét Mã QR</h2>
+    <h2>Máy Quét QR (jsQR)</h2>
 
     <div class="container">
-        <div id="reader"></div>
+        <div id="loading-text">📷 Đang yêu cầu quyền truy cập camera...</div>
+        
+        <div id="canvas-container">
+            <canvas id="canvas" hidden></canvas>
+        </div>
 
         <div class="result-container" id="result-box">
-            <div class="result-title">Nội dung quét được</div>
-            <div id="result-text">Đang chờ quét...</div>
+            <div class="result-title">Kết quả quét:</div>
+            <div id="result-text">Chưa có dữ liệu</div>
         </div>
     </div>
 
     <script>
-        // Hàm xử lý khi quét thành công
-        function onScanSuccess(decodedText, decodedResult) {
-            const resultBox = document.getElementById('result-box');
-            const resultText = document.getElementById('result-text');
-            
-            resultBox.style.display = 'block';
-            
-            // Nếu là liên kết, tạo thẻ A để bấm được luôn
-            if (decodedText.startsWith('http://') || decodedText.startsWith('https://')) {
-                resultText.innerHTML = `<a href="${decodedText}" target="_blank" style="color: #0071e3; text-decoration: none; word-break: break-all;">${decodedText} ↗</a>`;
-            } else {
-                resultText.innerText = decodedText;
-            }
+        // Khởi tạo các phần tử DOM
+        const video = document.createElement("video");
+        const canvasElement = document.getElementById("canvas");
+        const canvas = canvasElement.getContext("2d", { willReadFrequently: true });
+        const loadingText = document.getElementById("loading-text");
+        const resultBox = document.getElementById("result-box");
+        const resultText = document.getElementById("result-text");
 
-            // Phản hồi rung nhẹ trên điện thoại khi quét trúng (nếu thiết bị hỗ trợ)
-            if (navigator.vibrate) {
-                navigator.vibrate(100);
+        // Yêu cầu quyền camera sau khi trang tải xong
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(function(stream) {
+                video.srcObject = stream;
+                // BẮT BUỘC: Các thuộc tính này giúp Safari không tự bật trình phát video fullscreen
+                video.setAttribute("playsinline", true); 
+                video.setAttribute("webkit-playsinline", true);
+                video.play();
+                
+                // Bắt đầu vòng lặp quét hình ảnh
+                requestAnimationFrame(tick);
+            })
+            .catch(function(err) {
+                loadingText.innerText = "❌ Không thể truy cập Camera. Hãy chắc chắn bạn đang dùng HTTPS hoặc localhost, và đã cấp quyền cho Safari.";
+                console.error(err);
+            });
+
+        function tick() {
+            // Kiểm tra xem camera đã sẵn sàng và có dữ liệu hình ảnh chưa
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                loadingText.hidden = true;
+                canvasElement.hidden = false;
+
+                // Thiết lập kích thước canvas bằng kích thước thật của luồng video
+                canvasElement.height = video.videoHeight;
+                canvasElement.width = video.videoWidth;
+                
+                // Vẽ khung hình hiện tại của video lên canvas
+                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                
+                // Trích xuất dữ liệu pixel từ canvas để jsQR đọc
+                const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                
+                // Thư viện jsQR tiến hành dò tìm mã QR
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                });
+
+                // Nếu tìm thấy mã QR
+                if (code && code.data.trim() !== "") {
+                    // Vẽ khung màu đỏ viền quanh mã QR để người dùng biết (Tùy chọn)
+                    drawRect(code.location);
+
+                    // Hiển thị kết quả ra màn hình
+                    resultBox.style.display = 'block';
+                    if (code.data.startsWith('http://') || code.data.startsWith('https://')) {
+                        resultText.innerHTML = `<a href="${code.data}" target="_blank" style="color: #0071e3; text-decoration: none;">${code.data} ↗</a>`;
+                    } else {
+                        resultText.innerText = code.data;
+                    }
+                }
             }
+            // Tiếp tục vòng lặp quét ở khung hình tiếp theo (tối ưu hiệu năng cho Safari)
+            requestAnimationFrame(tick);
         }
 
-        function onScanFailure(error) {
-            // Để trống để tránh quá tải bộ nhớ trên Safari
+        // Hàm phụ để vẽ đường viền đỏ xung quanh mã QR khi phát hiện được
+        function drawRect(location) {
+            canvas.beginPath();
+            canvas.moveTo(location.topLeftCorner.x, location.topLeftCorner.y);
+            canvas.lineTo(location.topRightCorner.x, location.topRightCorner.y);
+            canvas.lineTo(location.bottomRightCorner.x, location.bottomRightCorner.y);
+            canvas.lineTo(location.bottomLeftCorner.x, location.bottomLeftCorner.y);
+            canvas.closePath();
+            canvas.lineWidth = 4;
+            canvas.strokeStyle = "#ff3b30"; // Màu đỏ của Apple
+            canvas.stroke();
         }
-
-        // Cấu hình quét tối ưu cho Safari và iOS
-        const config = { 
-            fps: 15, // Tăng tốc độ quét lên 15fps
-            qrbox: function(viewfinderWidth, viewfinderHeight) {
-                // Tạo khung quét vuông bằng 65% cạnh nhỏ nhất của màn hình
-                let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
-                let qrboxSize = Math.floor(minEdgeSize * 0.65);
-                if (qrboxSize < 200) qrboxSize = 200; // Không để khung quá nhỏ
-                return { width: qrboxSize, height: qrboxSize };
-            },
-            experimentalFeatures: {
-                useBarCodeDetectorIfSupported: true // Tận dụng phần cứng Apple nếu có hỗ trợ
-            }
-        };
-
-        // Khởi tạo máy quét
-        let html5QrcodeScanner = new Html5QrcodeScanner("reader", config, /* verbose= */ false);
-        
-        // Chạy máy quét
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     </script>
-
 </body>
 </html>
