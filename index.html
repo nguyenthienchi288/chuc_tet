@@ -35,7 +35,7 @@
 </head>
 <body>
 
-    <div class="header">Hệ Thống Điểm Danh Nhan 2 </div>
+    <div class="header">Hệ Thống Điểm Danh Nhan 3 </div>
 
     <button id="start-btn" class="btn btn-start" onclick="startCamera()">Bật Camera Quét Mã</button>
 
@@ -180,8 +180,7 @@
         } catch(e) { console.log("Trình duyệt không hỗ trợ AudioContext"); }
     }
 
-    // --- 4. GỬI DỮ LIỆU LÊN SERVER ---
-    // --- 4. GỬI DỮ LIỆU LÊN SERVER ---
+   // --- 4. GỬI DỮ LIỆU LÊN SERVER ---
 function sendData() {
     if (scannedCodes.length === 0) return;
     
@@ -189,39 +188,28 @@ function sendData() {
     btn.innerText = "Đang gửi...";
     btn.disabled = true;
 
-    // Đóng gói dữ liệu thành JSON object
-    const payload = JSON.stringify({ qrData: scannedCodes });
-    
-    // LOG 1: Dữ liệu Frontend chuẩn bị gửi đi
-    console.log("📤 [CLIENT GỬI] Dữ liệu payload:", payload);
+    // Đóng gói dữ liệu bằng URLSearchParams (Cách an toàn nhất cho Google Apps Script)
+    const params = new URLSearchParams();
+    params.append("qrData", JSON.stringify(scannedCodes));
 
     fetch(GAS_WEB_APP_URL, {
         method: "POST",
-        headers: {
-            // Sử dụng text/plain để tránh bị trình duyệt chặn CORS Preflight (lỗi OPTIONS)
-            "Content-Type": "text/plain;charset=utf-8" 
-        },
-        body: payload,
-        redirect: "follow" // BẮT BUỘC: Để trình duyệt đi theo redirect 302 của Google
+        body: params
     })
     .then(res => res.json())
     .then(data => {
-        // LOG 2: Dữ liệu Frontend nhận về từ Server
-        console.log("📥 [CLIENT NHẬN] Phản hồi từ Server:", data);
-
         if (data.status === "success") {
             showToast(`✅ Đã lưu thành công ${data.count} mã!`);
-            scannedCodes = []; // Làm rỗng mảng sau khi gửi thành công
+            scannedCodes = []; // Làm rỗng mảng sau khi gửi
             updateUI();
         } else {
-            console.error("❌ [CLIENT NHẬN LỖI]:", data.message);
-            alert("Lỗi Server: " + data.message + "\n\nChi tiết: " + data.rawReceived);
+            // Hiển thị lỗi rõ ràng nếu có
+            alert("LỖI TỪ SERVER:\n" + data.message + "\n\nDữ liệu server nhận được: " + data.rawReceived);
         }
     })
     .catch(err => {
-        // LOG 3: Lỗi mạng hoặc lỗi không parse được JSON
-        console.error("❌ [LỖI FETCH]:", err);
-        alert("Lỗi kết nối mạng, gửi thất bại! Vui lòng mở F12 xem Console để biết chi tiết.");
+        alert("Lỗi kết nối mạng hoặc lỗi CORS! Hãy kiểm tra lại link Web App.");
+        console.error(err);
     })
     .finally(() => {
         btn.innerText = "Gửi Dữ Liệu";
