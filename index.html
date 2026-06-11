@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -26,7 +25,6 @@
             color: var(--text);
         }
 
-        /* Thanh Header */
         .header {
             width: 100%;
             background: #fff;
@@ -48,15 +46,24 @@
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             background: #000;
-            /* Viền mặc định */
-            border: 4px solid transparent; 
-            transition: border-color 0.3s ease;
+        }
+
+        /* Lớp phủ ::after để hiển thị viền xanh đè lên video */
+        #camera-wrapper::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 6px solid transparent;
+            border-radius: 12px;
+            pointer-events: none; /* Quan trọng: Cho phép bấm xuyên qua lớp này */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            z-index: 10;
         }
 
         /* Hiệu ứng chớp xanh khi quét thành công */
-        #camera-wrapper.scan-success {
+        #camera-wrapper.scan-success::after {
             border-color: var(--success);
-            box-shadow: 0 0 20px rgba(40, 167, 69, 0.6);
+            box-shadow: inset 0 0 25px rgba(40, 167, 69, 0.8);
         }
 
         #reader {
@@ -64,7 +71,6 @@
             min-height: 300px;
         }
 
-        /* Trạng thái phía dưới */
         #status-card {
             margin-top: 20px;
             background: #fff;
@@ -77,7 +83,6 @@
             font-size: 15px;
         }
 
-        /* Nút khởi động (Dành cho iOS yêu cầu click để mở cam) */
         #start-btn {
             background-color: var(--primary);
             color: white;
@@ -91,7 +96,6 @@
             box-shadow: 0 4px 6px rgba(0,123,255,0.3);
         }
 
-        /* Hệ thống Toast Thông báo trôi nổi */
         #toast-container {
             position: fixed;
             bottom: 20px;
@@ -128,7 +132,6 @@
         }
     </style>
 </head>
-
 <body>
 
     <div class="header">Hệ Thống Điểm Danh</div>
@@ -146,15 +149,14 @@
     <div id="toast-container"></div>
 
     <script>
-        // BƯỚC QUAN TRỌNG: Link Web App của thầy
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwVxDtXdMx0pbEzyvu9fQuDukgPPPRncs-oJYGlzP9jAfGPvcrGsTLukG92tw7l60O9uw/exec";
+        // Cập nhật lại Link Web App mới nhất vào đây sau khi Deploy
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJcOr73VVjzuH4WK8rpNuX8ZmS3gBtWnXaH9i15zj6V2A8lKq2m3l0wK28TC7KnTyH8A/exec";
 
         let html5QrCode;
         let lastScannedText = "";
         let lastScannedTime = 0;
-        const cooldownTime = 3000; // 3 giây chống quét trùng
+        const cooldownTime = 4000; // Tăng lên 4 giây để chờ thao tác mạng hoàn tất
 
-        // Hàm hiển thị thông báo nổi (Toast)
         function showToast(message, type = 'info', duration = 3000) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -162,14 +164,12 @@
             toast.innerHTML = message;
             container.appendChild(toast);
 
-            // Tự động xóa sau thời gian duration
             setTimeout(() => {
                 toast.style.opacity = '0';
                 setTimeout(() => toast.remove(), 300);
             }, duration);
         }
 
-        // Khởi động Camera (Gọi khi bấm nút để lách luật bảo mật của iOS Safari/Edge)
         function startCamera() {
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('camera-wrapper').style.display = 'block';
@@ -183,7 +183,6 @@
                 aspectRatio: 1.0 
             };
 
-            // Ưu tiên camera sau (environment)
             html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
                 .then(() => {
                     document.getElementById('status-card').innerText = "Sẵn sàng! Hãy đưa mã QR vào khung.";
@@ -194,11 +193,10 @@
                 });
         }
 
-        // Xử lý khi quét thành công
         function onScanSuccess(decodedText) {
             const currentTime = new Date().getTime();
 
-            // Chống spam: Bỏ qua nếu mã trùng và chưa hết thời gian chờ
+            // Kiểm tra chống spam quét trùng
             if (decodedText === lastScannedText && (currentTime - lastScannedTime) < cooldownTime) {
                 return;
             }
@@ -206,30 +204,38 @@
             lastScannedText = decodedText;
             lastScannedTime = currentTime;
 
-            // 1. HIỆU ỨNG KHUNG XANH
+            // 1. KÍCH HOẠT HIỆU ỨNG KHUNG XANH
             const camWrapper = document.getElementById('camera-wrapper');
             camWrapper.classList.add('scan-success');
-            setTimeout(() => camWrapper.classList.remove('scan-success'), 800); // Tắt chớp xanh sau 0.8s
+            setTimeout(() => camWrapper.classList.remove('scan-success'), 800); 
 
-            // 2. THÔNG BÁO 1: ĐÃ QUÉT MÃ (Local)
-            showToast(`🔍 Đã quét: <b>${decodedText}</b>. Đang gửi...`, 'info', 2000);
-            document.getElementById('status-card').innerHTML = `<span style="color: #007bff; font-weight: bold;">Đang xử lý:</span> ${decodedText}`;
+            // 2. THÔNG BÁO LOCAL
+            showToast(`🔍 Đang xử lý: <b>${decodedText}</b>...`, 'info', 2000);
+            document.getElementById('status-card').innerHTML = `<span style="color: #007bff; font-weight: bold;">Đang gửi dữ liệu:</span> ${decodedText}`;
 
-            // 3. GỬI DỮ LIỆU VÀ HIỂN THỊ THÔNG BÁO 2
+            // 3. GỬI DỮ LIỆU ĐI (Đã gỡ bỏ mode: "no-cors")
             fetch(GAS_WEB_APP_URL, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                headers: { 
+                    "Content-Type": "text/plain;charset=utf-8" 
+                },
                 body: JSON.stringify({ qrText: decodedText })
             })
-            .then(() => {
-                // THÔNG BÁO 2: ĐÃ GHI NHẬN LÊN SHEET
-                showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, 'success', 4000);
-                document.getElementById('status-card').innerHTML = `<span style="color: #28a745; font-weight: bold;">Đã lưu thành công!</span> Sẵn sàng quét tiếp.`;
+            .then(response => response.json()) // Đọc phản hồi dưới dạng JSON
+            .then(data => {
+                if (data.status === "success") {
+                    showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, 'success', 4000);
+                    document.getElementById('status-card').innerHTML = `<span style="color: #28a745; font-weight: bold;">Đã lưu thành công!</span> Sẵn sàng quét tiếp.`;
+                } else {
+                    throw new Error(data.message);
+                }
             })
             .catch(error => {
-                showToast(`❌ Lỗi gửi dữ liệu! Thử lại.`, 'error', 4000);
-                document.getElementById('status-card').innerHTML = `<span style="color: #dc3545; font-weight: bold;">Lỗi mạng.</span> Vui lòng quét lại.`;
+                console.error("Lỗi:", error);
+                showToast(`❌ Lỗi gửi dữ liệu! Xem lại kết nối mạng.`, 'error', 4000);
+                document.getElementById('status-card').innerHTML = `<span style="color: #dc3545; font-weight: bold;">Lỗi kết nối.</span> Vui lòng quét lại.`;
+                // Reset thời gian để quét lại ngay lập tức nếu lỗi
+                lastScannedTime = 0; 
             });
         }
     </script>
