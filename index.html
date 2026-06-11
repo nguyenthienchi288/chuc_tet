@@ -35,7 +35,7 @@
 </head>
 <body>
 
-    <div class="header">Hệ Thống Điểm Danh 8</div>
+    <div class="header">Hệ Thống Điểm Danh 9</div>
 
     <button id="start-btn" class="btn btn-start" onclick="startCamera()">Bật Camera Quét Mã</button>
 
@@ -58,7 +58,7 @@
 
 <script>
     // --- 1. CẤU HÌNH ---
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwDMl7Z17LK_B3__JLY2h-GO7IZ9j1WOZW1x5WEBhMxkgHl7uxUd2J-Ge-D5MQGAs55/execc";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwDMl7Z17LK_B3__JLY2h-GO7IZ9j1WOZW1x5WEBhMxkgHl7uxUd2J-Ge-D5MQGAs55/exec";
     
     // Mảng lưu trữ các mã QR đã quét (Lưu tạm ở RAM)
     let scannedCodes = [];
@@ -146,17 +146,19 @@
         requestAnimationFrame(tick);
     }
 
-    function processQRCode(data) {
-        // CHỐNG TRÙNG: Kiểm tra xem mã này đã có trong mảng chưa
-        if (scannedCodes.includes(data)) {
-            return; // Nếu có rồi thì bỏ qua luôn, không làm gì cả
-        }
+function processQRCode(data) {
+    // 1. THÊM DÒNG NÀY: Nếu dữ liệu bị rỗng hoặc chỉ có khoảng trắng thì bỏ qua luôn
+    if (!data || data.trim() === "") return; 
 
-        // Thêm vào mảng
-        scannedCodes.push(data);
-        
-        // Hiệu ứng chớp xanh
-        const camWrapper = document.getElementById('camera-wrapper');
+    // 2. CHỐNG TRÙNG: Kiểm tra xem mã này đã có trong mảng chưa
+    if (scannedCodes.includes(data)) {
+        return; 
+    }
+
+    // Các đoạn code bên dưới giữ nguyên...
+    scannedCodes.push(data);
+    
+    const camWrapper = document.getElementById('camera-wrapper');
         camWrapper.classList.add('scan-success');
         setTimeout(() => camWrapper.classList.remove('scan-success'), 100);
 
