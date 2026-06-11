@@ -4,148 +4,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hệ Thống Điểm Danh QR Code</title>
+    <title>Điểm Danh QR</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 10px;
-            background-color: #f4f4f9;
+        :root {
+            --primary: #007bff;
+            --success: #28a745;
+            --bg: #f4f7f6;
+            --text: #333;
         }
 
-        h2 {
-            color: #333;
-            margin-bottom: 10px;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            color: var(--text);
+        }
+
+        /* Thanh Header */
+        .header {
+            width: 100%;
+            background: #fff;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* Khu vực Camera */
+        #camera-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: #000;
+            /* Viền mặc định */
+            border: 4px solid transparent; 
+            transition: border-color 0.3s ease;
+        }
+
+        /* Hiệu ứng chớp xanh khi quét thành công */
+        #camera-wrapper.scan-success {
+            border-color: var(--success);
+            box-shadow: 0 0 20px rgba(40, 167, 69, 0.6);
         }
 
         #reader {
             width: 100%;
-            max-width: 500px;
-            /* Tối ưu cho thiết bị di động */
-            margin: 0 auto;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background: #fff;
+            min-height: 300px;
         }
 
-        #result-box {
+        /* Trạng thái phía dưới */
+        #status-card {
             margin-top: 20px;
-            padding: 15px;
-            font-size: 16px;
-            color: #333;
             background: #fff;
+            padding: 15px 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            word-break: break-all;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            width: 90%;
+            max-width: 460px;
+            text-align: center;
+            font-size: 15px;
         }
 
-        .success {
-            color: #28a745;
+        /* Nút khởi động (Dành cho iOS yêu cầu click để mở cam) */
+        #start-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 25px;
+            margin-top: 20px;
             font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,123,255,0.3);
         }
 
-        .error {
-            color: #dc3545;
-            font-weight: bold;
+        /* Hệ thống Toast Thông báo trôi nổi */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+            width: 90%;
+            max-width: 400px;
         }
 
-        .loading {
-            color: #007bff;
-            font-weight: bold;
+        .toast {
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideUp 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        .toast.info { background-color: #17a2b8; }
+        .toast.success { background-color: var(--success); }
+        .toast.error { background-color: #dc3545; }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
 
 <body>
 
-    <h2>Điểm Danh QR</h2>
+    <div class="header">Hệ Thống Điểm Danh</div>
 
-    <div id="reader"></div>
+    <button id="start-btn" onclick="startCamera()">Bật Camera Quét Mã</button>
 
-    <div id="result-box">Đang đợi cấp quyền Camera...</div>
+    <div id="camera-wrapper" style="display: none;">
+        <div id="reader"></div>
+    </div>
+
+    <div id="status-card">
+        Vui lòng bấm nút phía trên để cấp quyền và mở Camera.
+    </div>
+
+    <div id="toast-container"></div>
 
     <script>
-        // BƯỚC QUAN TRỌNG: Dán URL Web App của Google Apps Script vào đây
+        // BƯỚC QUAN TRỌNG: Link Web App của thầy
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwVxDtXdMx0pbEzyvu9fQuDukgPPPRncs-oJYGlzP9jAfGPvcrGsTLukG92tw7l60O9uw/exec";
 
+        let html5QrCode;
         let lastScannedText = "";
         let lastScannedTime = 0;
-        const cooldownTime = 4000; // Thời gian chờ (4 giây) giữa 2 lần quét cùng 1 mã để chống spam
+        const cooldownTime = 3000; // 3 giây chống quét trùng
 
-        function onScanSuccess(decodedText, decodedResult) {
+        // Hàm hiển thị thông báo nổi (Toast)
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = message;
+            container.appendChild(toast);
+
+            // Tự động xóa sau thời gian duration
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // Khởi động Camera (Gọi khi bấm nút để lách luật bảo mật của iOS Safari/Edge)
+        function startCamera() {
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('camera-wrapper').style.display = 'block';
+            document.getElementById('status-card').innerText = "Đang khởi động Camera...";
+
+            html5QrCode = new Html5Qrcode("reader");
+            
+            const config = { 
+                fps: 10, 
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0 
+            };
+
+            // Ưu tiên camera sau (environment)
+            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+                .then(() => {
+                    document.getElementById('status-card').innerText = "Sẵn sàng! Hãy đưa mã QR vào khung.";
+                })
+                .catch((err) => {
+                    document.getElementById('status-card').innerText = "Lỗi: Không thể truy cập Camera. Vui lòng kiểm tra quyền.";
+                    document.getElementById('start-btn').style.display = 'block';
+                });
+        }
+
+        // Xử lý khi quét thành công
+        function onScanSuccess(decodedText) {
             const currentTime = new Date().getTime();
 
-            // Logic chống quét lặp lại: Bỏ qua nếu quét cùng 1 mã trong vòng 4 giây
+            // Chống spam: Bỏ qua nếu mã trùng và chưa hết thời gian chờ
             if (decodedText === lastScannedText && (currentTime - lastScannedTime) < cooldownTime) {
                 return;
             }
 
-            // Lưu lại mã và thời gian vừa quét
             lastScannedText = decodedText;
             lastScannedTime = currentTime;
 
-            // Hiển thị trạng thái
-            const resultBox = document.getElementById('result-box');
-            resultBox.innerHTML = `<span class="loading">Đang ghi nhận:</span> ${decodedText}...`;
+            // 1. HIỆU ỨNG KHUNG XANH
+            const camWrapper = document.getElementById('camera-wrapper');
+            camWrapper.classList.add('scan-success');
+            setTimeout(() => camWrapper.classList.remove('scan-success'), 800); // Tắt chớp xanh sau 0.8s
 
-            // Gửi dữ liệu tới Google Sheets thông qua POST
+            // 2. THÔNG BÁO 1: ĐÃ QUÉT MÃ (Local)
+            showToast(`🔍 Đã quét: <b>${decodedText}</b>. Đang gửi...`, 'info', 2000);
+            document.getElementById('status-card').innerHTML = `<span style="color: #007bff; font-weight: bold;">Đang xử lý:</span> ${decodedText}`;
+
+            // 3. GỬI DỮ LIỆU VÀ HIỂN THỊ THÔNG BÁO 2
             fetch(GAS_WEB_APP_URL, {
                 method: "POST",
-                mode: "no-cors", // Sử dụng no-cors để tránh lỗi CORS khi gọi từ HTML tĩnh
-                headers: {
-                    "Content-Type": "text/plain;charset=utf-8"
-                },
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify({ qrText: decodedText })
             })
-                .then(() => {
-                    // Do dùng no-cors nên không đọc được JSON response, nhưng fetch chạy thành công nghĩa là đã gửi đi
-                    resultBox.innerHTML = `<span class="success">✓ Thành công!</span><br>Đã lưu: ${decodedText}`;
-
-                    // Trả lại thông báo mặc định sau 2.5 giây
-                    setTimeout(() => {
-                        if (resultBox.innerText.includes('Thành công')) {
-                            resultBox.innerHTML = "Sẵn sàng quét mã tiếp theo...";
-                        }
-                    }, 2500);
-                })
-                .catch(error => {
-                    console.error('Lỗi khi gửi dữ liệu:', error);
-                    resultBox.innerHTML = `<span class="error">✗ Lỗi khi lưu dữ liệu! Hãy thử lại.</span>`;
-                });
+            .then(() => {
+                // THÔNG BÁO 2: ĐÃ GHI NHẬN LÊN SHEET
+                showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, 'success', 4000);
+                document.getElementById('status-card').innerHTML = `<span style="color: #28a745; font-weight: bold;">Đã lưu thành công!</span> Sẵn sàng quét tiếp.`;
+            })
+            .catch(error => {
+                showToast(`❌ Lỗi gửi dữ liệu! Thử lại.`, 'error', 4000);
+                document.getElementById('status-card').innerHTML = `<span style="color: #dc3545; font-weight: bold;">Lỗi mạng.</span> Vui lòng quét lại.`;
+            });
         }
-
-        function onScanFailure(error) {
-            // Các lỗi đọc khung hình liên tục sẽ bỏ qua ở đây để không làm gián đoạn
-            // console.warn(`Scan error = ${error}`);
-        }
-
-        // Cấu hình máy quét mã QR
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader",
-            {
-                fps: 10,  // Tốc độ quét 10 khung hình/giây
-                qrbox: { width: 250, height: 250 }, // Vùng focus vuông
-                aspectRatio: 1.0,
-                showTorchButtonIfSupported: true // Hiện nút bật đèn Flash nếu điện thoại hỗ trợ
-            },
-            false // verbose = false để ẩn log
-        );
-
-        // Khởi động Camera
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-
-        // Cập nhật trạng thái sau khi load
-        setTimeout(() => {
-            document.getElementById('result-box').innerHTML = "Hãy đưa mã QR vào khung hình camera.";
-        }, 2000);
-
     </script>
 </body>
-
 </html>
