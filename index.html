@@ -132,7 +132,7 @@
 </head>
 <body>
 
-    <div class="header">Hệ Thống Điểm Danh 3</div>
+    <div class="header">Hệ Thống Điểm Danh 4</div>
 
     <button id="start-btn" onclick="startCamera()">Bật Camera Quét Mã</button>
 
@@ -148,137 +148,217 @@
     <div id="toast-container"></div>
 
 <script>
-        // Dán Link Web App MỚI NHẤT (Vừa Deploy lại) vào đây
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyp7ygQrMSOi5gjg_pHBv0al6SVlmnstMvPTcjy2wJd7K6S0XhOtnDD_G4zv4P1gt1ouw/exec";
+    // Giữ nguyên link Web App / Sheet
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyp7ygQrMSOi5gjg_pHBv0al6SVlmnstMvPTcjy2wJd7K6S0XhOtnDD_G4zv4P1gt1ouw/exec";
 
-        // --- 1. CẤU HÌNH & TRẠNG THÁI ---
-        const COOLDOWN_TIME = 4000;
-        const SCAN_INTERVAL = 150; // Tối ưu: Chỉ chạy jsQR 150ms/lần để tránh quá tải CPU
+    const CONFIG = {
+        cooldownTime: 4000,
+        scanInterval: 250, // Giảm số lần quét QR để nhẹ CPU hơn
+        toastDuration: 3000
+    };
 
-        let lastScannedText = "";
-        let lastScannedTime = 0;
-        let lastTickTime = 0;
+    let lastScannedText = "";
+    let lastScannedTime = 0;
+    let lastScanFrameTime = 0;
+    let isSending = false;
+    let animationId = null;
+    let cameraStream = null;
 
-        // --- 2. DOM CACHING (Lưu sẵn các phần tử để tăng tốc độ truy xuất) ---
-        const video = document.getElementById("video");
-        const canvasElement = document.getElementById("canvas");
-        const canvas = canvasElement.getContext("2d", { willReadFrequently: true });
-        const domToastContainer = document.getElementById("toast-container");
-        const domStartBtn = document.getElementById("start-btn");
-        const domCameraWrapper = document.getElementById("camera-wrapper");
-        const domStatusCard = document.getElementById("status-card");
+    const video = document.getElementById("video");
+    const canvasElement = document.getElementById("canvas");
+    const canvas = canvasElement.getContext("2d", { willReadFrequently: true });
 
-        // --- 3. HÀM GIAO DIỆN (UI) ---
-        const showToast = (message, type = 'info', duration = 3000) => {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = message;
-            domToastContainer.appendChild(toast);
+    const startBtn = document.getElementById("start-btn");
+    const cameraWrapper = document.getElementById("camera-wrapper");
+    const statusCard = document.getElementById("status-card");
+    const toastContainer = document.getElementById("toast-container");
 
+    function setStatus(message, type = "info") {
+        const colors = {
+            info: "#007bff",
+            success: "#28a745",
+            error: "#dc3545",
+            warning: "#ffc107"
+        };
+
+        statusCard.innerHTML = `
+            <span style="color: ${colors[type] || colors.info}; font-weight: bold;">
+                ${message}
+            </span>
+        `;
+    }
+
+    function showToast(message, type = "info", duration = CONFIG.toastDuration) {
+        if (!toastContainer) return;
+
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.innerHTML = message;
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
+    }
+
+    async function startCamera() {
+        try {
+            startBtn.style.display = "none";
+            cameraWrapper.style.display = "block";
+            setStatus("Đang khởi động Camera...", "info");
+
+            cameraStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: "environment",
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                audio: false
+            });
+
+            video.srcObject = cameraStream;
+            video.setAttribute("playsinline", true);
+
+            await video.play();
+
+            setStatus("Sẵn sàng! Hãy đưa mã QR vào khung.", "success");
+
+            if (!animationId) {
+                animationId = requestAnimationFrame(scanLoop);
+            }
+
+        } catch (error) {
+            console.error("Camera error:", error);
+
+            setStatus("Lỗi: Không thể truy cập Camera. Vui lòng kiểm tra quyền.", "error");
+            showToast("❌ Không thể mở Camera. Hãy cấp quyền Camera cho trình duyệt.", "error", 4000);
+
+            startBtn.style.display = "block";
+            cameraWrapper.style.display = "none";
+        }
+    }
+
+    function scanLoop(timestamp) {
+        animationId = requestAnimationFrame(scanLoop);
+
+        if (
+            isSending ||
+            video.readyState !== video.HAVE_ENOUGH_DATA ||
+            timestamp - lastScanFrameTime < CONFIG.scanInterval
+        ) {
+            return;
+        }
+
+        lastScanFrameTime = timestamp;
+
+        const width = video.videoWidth;
+        const height = video.videoHeight;
+
+        if (!width || !height) return;
+
+        canvasElement.width = width;
+        canvasElement.height = height;
+
+        canvas.drawImage(video, 0, 0, width, height);
+
+        const imageData = canvas.getImageData(0, 0, width, height);
+
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: "dontInvert"
+        });
+
+        if (code && code.data) {
+            handleScanResult(code.data.trim());
+        }
+    }
+
+    function isDuplicateScan(decodedText) {
+        const now = Date.now();
+
+        return (
+            decodedText === lastScannedText &&
+            now - lastScannedTime < CONFIG.cooldownTime
+        );
+    }
+
+    function markScanSuccess() {
+        cameraWrapper.classList.add("scan-success");
+
+        setTimeout(() => {
+            cameraWrapper.classList.remove("scan-success");
+        }, 800);
+    }
+
+    async function handleScanResult(decodedText) {
+        if (!decodedText || isSending || isDuplicateScan(decodedText)) {
+            return;
+        }
+
+        lastScannedText = decodedText;
+        lastScannedTime = Date.now();
+        isSending = true;
+
+        markScanSuccess();
+
+        showToast(`🔍 Đang xử lý: <b>${decodedText}</b>...`, "info", 2000);
+        setStatus(`Đang gửi dữ liệu: ${decodedText}`, "info");
+
+        try {
+            const params = new URLSearchParams();
+            params.append("qrText", decodedText);
+
+            const response = await fetch(GAS_WEB_APP_URL, {
+                method: "POST",
+                body: params
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.status !== "success") {
+                throw new Error(data.message || "Google Apps Script trả về lỗi.");
+            }
+
+            showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, "success", 4000);
+            setStatus("Đã lưu thành công! Sẵn sàng quét tiếp.", "success");
+
+        } catch (error) {
+            console.error("Send error:", error);
+
+            showToast("❌ Lỗi gửi dữ liệu! Vui lòng kiểm tra mạng hoặc Web App.", "error", 4000);
+            setStatus("Lỗi kết nối. Vui lòng quét lại.", "error");
+
+            // Cho phép quét lại ngay nếu gửi thất bại
+            lastScannedTime = 0;
+
+        } finally {
             setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, duration);
-        };
+                isSending = false;
+            }, 500);
+        }
+    }
 
-        const updateStatus = (htmlContent) => {
-            domStatusCard.innerHTML = htmlContent;
-        };
+    function stopCamera() {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
 
-        // --- 4. CAMERA & QUÉT MÃ ---
-        const startCamera = async () => {
-            domStartBtn.style.display = 'none';
-            domCameraWrapper.style.display = 'block';
-            updateStatus("Đang khởi động Camera...");
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+            cameraStream = null;
+        }
 
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                video.srcObject = stream;
-                video.setAttribute("playsinline", true); // Bắt buộc cho iOS
-                await video.play();
-                
-                requestAnimationFrame(tick);
-                updateStatus("Sẵn sàng! Hãy đưa mã QR vào khung.");
-            } catch (err) {
-                console.error("Lỗi truy cập camera:", err);
-                updateStatus("Lỗi: Không thể truy cập Camera. Vui lòng kiểm tra quyền.");
-                domStartBtn.style.display = 'block';
-            }
-        };
-
-        const tick = (timestamp) => {
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                canvasElement.hidden = false;
-                canvasElement.height = video.videoHeight;
-                canvasElement.width = video.videoWidth;
-                
-                // Vẽ video lên canvas để lấy khung hình
-                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-
-                // TỐI ƯU: Chỉ chạy thuật toán quét QR nếu đã qua khoảng thời gian SCAN_INTERVAL
-                if (timestamp - lastTickTime >= SCAN_INTERVAL) {
-                    lastTickTime = timestamp;
-                    
-                    const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                        inversionAttempts: "dontInvert",
-                    });
-
-                    if (code) {
-                        handleScanSuccess(code.data);
-                    }
-                }
-            }
-            // Tiếp tục vòng lặp
-            requestAnimationFrame(tick);
-        };
-
-        // --- 5. XỬ LÝ DỮ LIỆU & GỬI LÊN GOOGLE SHEETS ---
-        const handleScanSuccess = async (decodedText) => {
-            const currentTime = Date.now();
-
-            // Cơ chế Cooldown: Tránh gửi trùng lặp một mã quá nhanh
-            if (decodedText === lastScannedText && (currentTime - lastScannedTime) < COOLDOWN_TIME) {
-                return;
-            }
-
-            // Cập nhật trạng thái lần quét cuối
-            lastScannedText = decodedText;
-            lastScannedTime = currentTime;
-
-            // Hiệu ứng nháy xanh khi quét thành công
-            domCameraWrapper.classList.add('scan-success');
-            setTimeout(() => domCameraWrapper.classList.remove('scan-success'), 800);
-
-            showToast(`🔍 Đang xử lý: <b>${decodedText}</b>...`, 'info', 2000);
-            updateStatus(`<span style="color: #007bff; font-weight: bold;">Đang gửi dữ liệu:</span> ${decodedText}`);
-
-            // Gửi dữ liệu qua fetch API
-            try {
-                const params = new URLSearchParams({ qrText: decodedText });
-
-                const response = await fetch(GAS_WEB_APP_URL, {
-                    method: "POST",
-                    body: params
-                });
-
-                const data = await response.json();
-
-                if (data.status === "success") {
-                    showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, 'success', 4000);
-                    updateStatus(`<span style="color: #28a745; font-weight: bold;">Đã lưu thành công!</span> Sẵn sàng quét tiếp.`);
-                } else {
-                    throw new Error(data.message || "Lỗi từ phía Server");
-                }
-            } catch (error) {
-                console.error("Lỗi:", error);
-                showToast(`❌ Lỗi gửi dữ liệu! Xem lại kết nối mạng.`, 'error', 4000);
-                updateStatus(`<span style="color: #dc3545; font-weight: bold;">Lỗi kết nối.</span> Vui lòng quét lại.`);
-                
-                // Reset thời gian để người dùng có thể thử quét lại ngay lập tức nếu bị lỗi mạng
-                lastScannedTime = 0; 
-            }
-        };
-    </script>
+        video.srcObject = null;
+        startBtn.style.display = "block";
+        cameraWrapper.style.display = "none";
+        setStatus("Camera đã tắt.", "warning");
+    }
+</script>
 </body>
 </html>
