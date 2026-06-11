@@ -4,453 +4,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tết Bính Ngọ 2026 - Thầy Nguyễn Thiện Chí</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Noto+Serif+JP:wght@700&family=Noto+Serif+KR:wght@700&family=ZCOOL+XiaoWei&family=Quicksand:wght@400;600&display=swap"
-        rel="stylesheet">
-
+    <title>Hệ Thống Điểm Danh QR Code</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        :root {
-            --primary: #d32f2f;
-            --secondary: #ffd700;
-            --accent: #00695c;
-            --ink: #1a1a1a;
-            --font-main: 'Quicksand', sans-serif;
-            --font-title: 'Dancing Script', cursive;
-        }
-
-        /* Themes Culture - Tối ưu hiển thị cho từng quốc gia */
-        [data-theme="vn"] {
-            --primary: #b71c1c;
-            --secondary: #ffeb3b;
-            --accent: #2e7d32;
-            --pattern: url('https://www.transparenttextures.com/patterns/natural-paper.png');
-        }
-
-        [data-theme="cn"] {
-            --primary: #cc0000;
-            --secondary: #ffca28;
-            --accent: #004d40;
-            --font-title: 'ZCOOL XiaoWei', serif;
-            --pattern: url('https://www.transparenttextures.com/patterns/exclusive-paper.png');
-        }
-
-        [data-theme="kr"] {
-            --primary: #283593;
-            --secondary: #e91e63;
-            --accent: #fbc02d;
-            --font-title: 'Noto Serif KR', serif;
-            --pattern: url('https://www.transparenttextures.com/patterns/fancy-pants.png');
-        }
-
-        [data-theme="jp"] {
-            --primary: #f3bf32;
-            --secondary: #bc002d;
-            --accent: #1b5e20;
-            --font-title: 'Noto Serif JP', serif;
-            --ink: #212121;
-            --pattern: url('https://www.transparenttextures.com/patterns/shippo.png');
-        }
-
         body {
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-main);
-            background-color: var(--primary);
-            color: var(--ink);
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.8s ease;
-        }
-
-        .silk-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: var(--pattern);
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        #visualCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        .main-stage {
-            position: relative;
-            z-index: 10;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            padding-bottom: 30px;
-            /* Tạo khoảng trống để không bị Footer đè lên lời chúc */
-        }
-
-        .btn-open-lixi {
-            background: linear-gradient(135deg, var(--secondary), #f9a825);
-            border: 2px solid var(--secondary);
-            padding: 20px 40px;
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #8b0000;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: var(--font-title);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            transition: 0.3s;
-            animation: pulse 2s infinite;
-        }
-
-        .wish-card {
-            display: none;
-            width: 100%;
-            max-width: 450px;
-            margin-top: 10px;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 4px double var(--secondary);
-            border-radius: 20px;
+            font-family: Arial, sans-serif;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.8s ease forwards;
+            margin: 0;
+            padding: 10px;
+            background-color: #f4f4f9;
         }
 
-        .header-greeting {
-            font-family: var(--font-title);
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            line-height: 1.3;
-        }
-
-        .header-greeting small {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            display: block;
-            margin-top: 5px;
-        }
-
-        .wish-content {
-            font-size: 1.15rem;
+        h2 {
             color: #333;
-            margin-bottom: 15px;
-            font-weight: 500;
-            line-height: 1.6;
+            margin-bottom: 10px;
         }
 
-        .oracle-tag {
-            display: inline-block;
-            padding: 8px 15px;
-            background: var(--accent);
-            color: white;
-            border-radius: 10px;
-            font-style: italic;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
+        #reader {
+            width: 100%;
+            max-width: 500px;
+            /* Tối ưu cho thiết bị di động */
+            margin: 0 auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: #fff;
         }
 
-        .random-friend {
-            background: linear-gradient(to right, transparent, #fff3e0, transparent);
-            border-top: 1px dashed #e65100;
-            padding: 15px 5px;
-            color: #e65100;
-            font-weight: bold;
-            font-size: 0.95rem;
-        }
-
-        .student-name {
-            white-space: nowrap;
-            color: #b71c1c;
-            border-bottom: 2px solid #ffca28;
-        }
-
-        .footer-branding {
-            position: relative;
-            z-index: 20;
-            background: rgba(0, 0, 0, 0.9);
+        #result-box {
+            margin-top: 20px;
             padding: 15px;
-            margin-bottom: 100x;
-            /* Đẩy footer lên trên một chút so với đáy */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            border-top: 3px solid var(--secondary);
-            border-radius: 15px 15px 0 0;
-            /* Bo góc trên cho sang trọng */
+            font-size: 16px;
+            color: #333;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            word-break: break-all;
         }
 
-        .footer-branding a {
-            display: flex;
-            transition: transform 0.3s ease;
+        .success {
+            color: #28a745;
+            font-weight: bold;
         }
 
-        .footer-branding a:hover {
-            transform: scale(1.1);
-            /* Hiệu ứng phóng to khi chạm/di chuột */
+        .error {
+            color: #dc3545;
+            font-weight: bold;
         }
 
-        .footer-branding img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid var(--secondary);
-            object-fit: cover;
-            cursor: pointer;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1)
-            }
-
-            50% {
-                transform: scale(1.05)
-            }
-
-            100% {
-                transform: scale(1)
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px)
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0)
-            }
+        .loading {
+            color: #007bff;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <div class="silk-overlay"></div>
-    <canvas id="visualCanvas"></canvas>
 
-    <audio id="tetMusic" loop>
-        <source
-            src="https://ia800101.us.archive.org/31/items/nhu-hoa-mua-xuan-phung-khanh-linh-wren-evans-nhac-moi-tet-nay-v.-a-playlist-nhac-cua-tui/Nh%C6%B0%20Hoa%20M%C3%B9a%20Xu%C3%A2n%20-%20Ph%C3%B9ng%20Kh%C3%A1nh%20Linh%2C%20Wren%20Evans%20-%20Nh%E1%BA%A1c%20M%E1%BB%9Bi%20T%E1%BA%BFt%20N%C3%A0y%20-%20V.A%20-%20Playlist%20NhacCuaTui.mp3"
-            type="audio/mpeg">
-    </audio>
+    <h2>Điểm Danh QR</h2>
 
-    <main class="main-stage">
-        <button class="btn-open-lixi" id="btnMain" onclick="handleOpen()">🧧 MỞ LỜI CHÚC NĂM MỚI 🧧</button>
+    <div id="reader"></div>
 
-        <div class="wish-card" id="wishCard">
-            <div class="header-greeting" id="txtHeader"></div>
-            <div class="wish-content" id="txtWish"></div>
-            <div class="oracle-tag" id="txtOracle"></div>
-            <div class="random-friend">
-                🧧 Hãy giữ lời chúc này và gửi đến bạn:<br>
-                <span class="student-name" id="txtFriendName"></span>
-            </div>
-        </div>
-    </main>
-
-    <footer class="footer-branding">
-        <a href="https://www.facebook.com/goodwill288" target="_blank" title="Ghé thăm Facebook Thầy Chí">
-            <img src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/485726727_2772776322894559_4344530598610358149_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jLSa7xU2fjIQ7kNvwGT70XQ&_nc_oc=AdmEGMK6eJrDNIfNGXYbNr-uyQAO_Q4LktonhG7OLMEoNYprVvfg1nqO_I186CkVzvw&_nc_zt=23&_nc_ht=scontent.fsgn5-12.fna&_nc_gid=0i9x912aX4yTiLCj8BNeCA&oh=00_AfvBZ8CmaDnB0TTZsWJxqcbzcEO3d9Zj0MgHBKHf_8YdWw&oe=698B83C8"
-                alt="Thầy Nguyễn Thiện Chí">
-        </a>
-        <div style="color: var(--secondary)">
-            <div style="font-weight: bold; font-size: 1.1rem;">Thầy Nguyễn Thiện Chí</div>
-            <div style="font-size: 0.8rem; opacity: 0.9;">Chúc Trò vạn sự hanh thông!</div>
-        </div>
-    </footer>
-
-    <style>
-        /* Hiệu ứng nhỏ cho link Facebook khi di chuột vào hoặc chạm trên mobile */
-        .footer-branding a:hover,
-        .footer-branding a:active {
-            color: #fff !important;
-            text-shadow: 0 0 8px var(--secondary);
-            border-bottom: 1px solid var(--secondary);
-        }
-    </style>
+    <div id="result-box">Đang đợi cấp quyền Camera...</div>
 
     <script>
-        const students = [
-            { n: "Nguyễn Trần Diệu Anh", l: "7E" }, { n: "Ngô Trâm Anh", l: "7E" }, { n: "Dương Hoàng Bách", l: "7E" }, { n: "Phan Lê Thái Bình", l: "7E" }, { n: "Lê Hiếu Đạt", l: "7E" }, { n: "La Quốc Đạt", l: "7E" }, { n: "Vũ Hải Đăng", l: "7E" }, { n: "Dương Ánh Dương", l: "7E" }, { n: "Phạm Hữu Duy", l: "7E" }, { n: "Phan Trần Quốc Kiệt", l: "7E" }, { n: "Nguyễn Hoàng Long", l: "7E" }, { n: "Nguyễn Tiến Minh", l: "7E" }, { n: "Nguyễn Tiểu Phát", l: "7E" }, { n: "Trần Nguyễn Hưng Phú", l: "7E" }, { n: "Nguyễn Đỗ Minh Uyên", l: "7E" },
-            { n: "Dương Ý An", l: "7F" }, { n: "Hồ Minh Anh", l: "7F" }, { n: "Lê Hoàng Huy", l: "7F" }, { n: "Trần Hữu Khang", l: "7F" }, { n: "Phan Lê Phúc Lộc", l: "7F" }, { n: "Phạm Bình Minh", l: "7F" }, { n: "Nguyễn Ái Nhân", l: "7F" }, { n: "Phan Chí Nhân", l: "7F" }, { n: "Huỳnh Thiện Nhân", l: "7F" }, { n: "Lê Nguyễn Thiên Phúc", l: "7F" }, { n: "Trương Phú Trọng", l: "7F" }, { n: "Lê Phạm Hoàng Yến", l: "7F" },
-            { n: "Nguyễn Minh Anh", l: "8A" }, { n: "Lê Hoài Bảo", l: "8A" }, { n: "Nguyễn Minh Đăng", l: "8A" }, { n: "Trần Long Giang", l: "8A" }, { n: "Phan Ngân Hà", l: "8A" }, { n: "Nguyễn Tấn Hưng", l: "8A" }, { n: "Nguyễn Ngọc Phương Lan", l: "8A" }, { n: "Phan Nguyệt Minh", l: "8A" }, { n: "Huỳnh Thái Nhật Minh", l: "8A" }, { n: "Hồ Quang Minh", l: "8A" }, { n: "Phạm Hoàng Khánh Ngân", l: "8A" }, { n: "Huỳnh Khôi Nguyên", l: "8A" }, { n: "Lâm Gia Nhi", l: "8A" }, { n: "Nguyễn Cao An Nhiên", l: "8A" }, { n: "Cao Thiên Phước", l: "8A" }, { n: "Nguyễn Minh Tài", l: "8A" }, { n: "Tống Đức Thiên Tâm", l: "8A" }, { n: "La Quốc Thắng", l: "8A" }, { n: "Nguyễn Hồng Trúc Thi", l: "8A" }, { n: "Lê Tài Song Thư", l: "8A" }, { n: "Phạm Minh Tường", l: "8A" }, { n: "Lê Huỳnh Minh Uyên", l: "8A" }, { n: "Nguyễn Hoàng Vân", l: "8A" }, { n: "Nguyễn Quang Vinh", l: "8A" },
-            { n: "Nguyễn Phúc Như Anh", l: "8C" }, { n: "Bùi Đức Anh", l: "8C" }, { n: "Nguyễn Hoàng Bách", l: "8C" }, { n: "Nguyễn Trần Hoàng Đạt", l: "8C" }, { n: "Lê Ngọc Mỹ Duyên", l: "8C" }, { n: "Nguyễn Jennifer", l: "8C" }, { n: "Hoàng Gia Hân", l: "8C" }, { n: "Phan Thị Thu Hiền", l: "8C" }, { n: "Lê Bùi Hoàng Hoa", l: "8C" }, { n: "Lê Minh Hùng", l: "8C" }, { n: "Phan Thị Thanh Hương", l: "8C" }, { n: "Đào Minh Khang", l: "8C" }, { n: "Hồ Trọng Khánh", l: "8C" }, { n: "Lê Hoàng Đăng Khôi", l: "8C" }, { n: "Nguyễn Nhã Kỳ", l: "8C" }, { n: "Nguyễn Bùi Khánh Linh", l: "8C" }, { n: "Nguyễn Anh Minh", l: "8C" }, { n: "Bùi Vân Ngọc", l: "8C" }, { n: "Lê Gia Phát", l: "8C" }, { n: "Hoàng Thiên Phú", l: "8C" }, { n: "Trần Hồ Gia Phúc", l: "8C" }, { n: "Ngô Tấn Thanh", l: "8C" },
-            { n: "Trần Gia An", l: "9D" }, { n: "Nguyễn Gia Bảo", l: "9D" }, { n: "Lê Nguyễn Đức Duy", l: "9D" }, { n: "Trần Gia Hiếu", l: "9D" }, { n: "Lê Duy Khoa", l: "9D" }, { n: "Nguyễn Thiên Phúc", l: "9D" }, { n: "Bùi Tấn Tài", l: "9D" }, { n: "Lưu Phước Thiện", l: "9D" },
-            { n: "Lê Huỳnh Thúy An", l: "9B" }, { n: "Ngô Hồng Ánh", l: "9B" }, { n: "Huỳnh Đình Thư Cát", l: "9B" }, { n: "Nguyễn Lý Đông Dương", l: "9B" }, { n: "Phan Anh Hào", l: "9B" }, { n: "Lê Hoàng Long", l: "9B" }, { n: "Nguyễn Trọng Nhân", l: "9B" }, { n: "Phan Hà Bảo Ngân", l: "9B" }, { n: "Lê Nguyễn Thành Phúc", l: "9B" }, { n: "Lê Minh Thư", l: "9B" }, { n: "Hà Phương Trang", l: "9B" }, { n: "Nguyễn Lam Tuyền", l: "9B" }, { n: "Thái Huỳnh Nhã Uyên", l: "9B" },
-            { n: "Chung Nguyễn Hoàng Đức", l: "10S" }, { n: "Trương Thảo My", l: "10S" }, { n: "Ngô Thiện Nhân", l: "10S" }, { n: "Nguyễn Huỳnh Đông Nhi", l: "10S" }, { n: "Lê Quang Khải", l: "10S" }, { n: "Ngân Hà", l: "10S" },
-            { n: "Trần Gia Phúc", l: "11S" }, { n: "Nguyễn Minh Phương", l: "11S" }, { n: "Nguyễn Nhã Uyên", l: "11S" }, { n: "Trương Gia Hưng", l: "11S" }, { n: "Đinh Minh Luận", l: "11S" }, { n: "Trương Đặng Thành Nam", l: "11S" }, { n: "Đào Ngọc Bảo Như", l: "11S" }, { n: "Cao Thiên Phát", l: "11S" }, { n: "Nguyễn Bảo Thanh", l: "11S" }
-        ];
+        // BƯỚC QUAN TRỌNG: Dán URL Web App của Google Apps Script vào đây
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwVxDtXdMx0pbEzyvu9fQuDukgPPPRncs-oJYGlzP9jAfGPvcrGsTLukG92tw7l60O9uw/exec";
 
-        const cultures = [
-            { id: 'vn', greeting: 'Chúc Mừng Năm Mới <br><small>(Ngũ phúc lâm môn)</small>' },
-            { id: 'cn', greeting: 'Chúc Mừng Tân Niên<br><small>(新年快乐)</small>' },
-            { id: 'kr', greeting: 'Cung chúc Tân Xuân<br><small>(새해 복 많이 받으세요)</small>' },
-            { id: 'jp', greeting: 'Tân niên Vạn Phúc<br><small>(あけましておめでとう)</small>' }
-        ];
+        let lastScannedText = "";
+        let lastScannedTime = 0;
+        const cooldownTime = 4000; // Thời gian chờ (4 giây) giữa 2 lần quét cùng 1 mã để chống spam
 
-        const currentCulture = cultures[Math.floor(Math.random() * cultures.length)];
-        document.documentElement.setAttribute('data-theme', currentCulture.id);
+        function onScanSuccess(decodedText, decodedResult) {
+            const currentTime = new Date().getTime();
 
-        function handleOpen() {
-            const audio = document.getElementById('tetMusic');
-            audio.play().catch(() => console.log("Cần tương tác để phát nhạc"));
-
-            const student = students[Math.floor(Math.random() * students.length)];
-            const btn = document.getElementById('btnMain');
-            const card = document.getElementById('wishCard');
-
-            btn.style.display = 'none';
-            card.style.display = 'block';
-
-            document.getElementById('txtHeader').innerHTML = currentCulture.greeting;
-            document.getElementById('txtFriendName').innerText = `${student.n} - Lớp ${student.l}`;
-
-            // Dữ liệu câu chúc & quẻ
-            // ====== KHO DỮ LIỆU LỜI CHÚC ĐA DẠNG ======
-
-            const subjects = [
-                "Thầy chúc Trò",
-                "Năm mới Bính Ngọ, Thầy chúc Trò",
-                "Thầy mong Trò",
-                "Thầy gửi Trò lời chúc",
-                "Chúc Trò yêu quý của Thầy",
-                "Bước sang năm 2026, chúc Trò",
-                "Tết này, chúc Trò",
-                "Khai xuân rạng rỡ, chúc Trò",
-                "Dưới ánh mai vàng, Thầy mong Trò"
-            ];
-
-            const actions = [
-                // Học tập & Tư duy
-                "học hành tấn tới",
-                "logic thông suốt",
-                "thi cử thuận lợi",
-                "tư duy ngày càng sắc bén",
-                "tiếp thu kiến thức nhanh chóng",
-                "đạt được nhiều điểm 10 rạng rỡ",
-                "vượt qua mọi kỳ thi một cách nhẹ nhàng",
-                "trở thành phiên bản tốt hơn của chính mình",
-
-                // Tin học & Công nghệ
-                "code chạy mượt mà",
-                "kỹ năng lập trình thăng hạng",
-                "xây dựng được những thuật toán thông minh",
-                "làm chủ mọi ngôn ngữ lập trình",
-                "thiết kế cuộc đời đẹp như giao diện chuẩn UX/UI",
-                "vận hành cuộc sống chính xác như một bộ vi xử lý",
-                "kết nối với thành công với băng thông cực đại",
-                "bảo mật hạnh phúc khỏi mọi nỗi buồn"
-            ];
-
-            const itTerms = [
-                // Nhóm so sánh Tin học (Dành cho quẻ Tin học)
-                "như thuật toán tối ưu nhất",
-                "không bao giờ dính Bug hay Error",
-                "không gặp lỗi Syntax (cú pháp) trong đời",
-                "chạy nhanh và hiệu quả như độ phức tạp O(1)",
-                "mượt mà như CSS3 được tối ưu",
-                "debug mọi khó khăn phát ăn ngay",
-                "luôn ở chế độ High Performance (hiệu suất cao)",
-                "bền bỉ như ổ cứng SSD cao cấp",
-                "thông minh hơn trí tuệ nhân tạo (AI) thế hệ mới",
-                "vững chãi như cấu trúc dữ liệu cây nhị phân",
-                "linh hoạt như hàm xử lý đa luồng (Multi-threading)",
-                "không bao giờ bị Timeout (hết giờ) trước cơ hội"
-            ];
-
-            const trends = [
-                // Nhóm Trend Gen Z & Mạng xã hội
-                "học là phải slay 💅",
-                "đỉnh nóc kịch trần bay phấp phới 🚀",
-                "vibe luôn on top không bao giờ flop 🔥",
-                "mãi mận mãi keo trên con đường học vấn 🍎",
-                "không toxic, chỉ toàn magic 🪄",
-                "flex toàn điểm 10 cho thiên hạ trầm trồ 😎",
-                "ngoan xinh yêu của Thầy Chí 🎀",
-                "học hết mình, quẩy nhiệt tình, điểm số lung linh",
-                "thân hình khỏe mạnh như PC gaming cực khủng 🖥️",
-                "năng lượng tràn đầy, 'nhả vía' học giỏi cho cả lớp",
-                "nhan sắc thăng hạng, học lực bùng nổ 💥"
-            ];
-
-            const wishList = [];
-            subjects.forEach(s => actions.forEach(a => itTerms.forEach(i => wishList.push(`${s} ${a}, ${i}.`))));
-            trends.forEach(t => wishList.push(`🔥 Năm mới chúc Trò ${t}!`));
-
-            const oracles = [
-                // Nhóm Văn phòng & Cơ bản (Lớp 7-8)
-                "🔮 Quẻ Excel: Cuộc đời Trò năm nay như hàm SUM, bao nhiêu may mắn và điểm 10 đều được cộng dồn tất cả!",
-                "🔮 Quẻ Word: Mọi dự định trong năm mới đều được 'Auto-save', không bao giờ lo mất công sức!",
-                "🔮 Quẻ PowerPoint: Năm nay Trò sẽ tỏa sáng với các hiệu ứng 'Transition' cuộc đời vô cùng rực rỡ!",
-                "🔮 Quẻ Sơ đồ tư duy: Tư duy của Trò sẽ mạch lạc như một Mindmap, nhìn đâu cũng thấy hướng giải quyết!",
-                "🔮 Quẻ Scratch: Các khối lệnh Hạnh Phúc đã được lập trình sẵn, chỉ chờ Trò nhấn nút 'Cờ Xanh' là thăng hoa!",
-
-                // Nhóm Mạng & Phần cứng (Lớp 7-9)
-                "🔮 Quẻ Mạng: Băng thông niềm vui của Trò năm nay cực lớn, kết nối bạn bè luôn ở trạng thái 'Connected'!",
-                "🔮 Quẻ Phần cứng: Sức khỏe Trò bền bỉ như ổ cứng SSD, chạy cực nhanh và không ngại va chạm!",
-                "🔮 Quẻ Hệ điều hành: Trò sẽ đa nhiệm (Multi-tasking) cực tốt, vừa học giỏi vừa chơi hay mà không bị 'Lag'!",
-                "🔮 Quẻ Bảo mật: Mọi điều tiêu cực đều bị 'Firewall' của Trò chặn đứng từ vòng gửi xe!",
-
-                // Nhóm Thiết kế & Lập trình (Lớp 9-10)
-                "🔮 Quẻ HTML: Trò năm nay chính là thẻ <h1>, luôn là tiêu đề quan trọng và nổi bật nhất trong mọi cuộc chơi!",
-                "🔮 Quẻ CSS: Cuộc sống của Trò sẽ được 'Style' lại bằng những gam màu rực rỡ và lôi cuốn nhất!",
-                "🔮 Quẻ Python: Năm nay cuộc đời không có 'Syntax Error', mọi dự định đều chạy 'Smooth' từ đầu đến cuối!",
-                "🔮 Quẻ Biến số: Niềm vui của Trò là biến toàn cục (Global Variable), ở đâu cũng thấy, lúc nào cũng có!",
-                "🔮 Quẻ Vòng lặp: May mắn sẽ rơi vào vòng lặp 'While True' – lặp lại mãi mãi không có điểm dừng!",
-
-                // Nhóm Thuật toán & AI (Lớp 11 & Nâng cao)
-                "🔮 Quẻ AI: Trí tuệ của Trò năm nay đột phá như mô hình GPT-5, giải bài tập nhanh hơn cả tốc độ ánh sáng!",
-                "🔮 Quẻ Database: Mọi kỷ niệm đẹp sẽ được 'Insert' liên tục, còn nỗi buồn thì tự động bị 'Drop' vĩnh viễn!",
-                "🔮 Quẻ Cấu trúc dữ liệu: Khó khăn được sắp xếp theo kiểu Ngăn xếp (Stack), cái nào đến sau xử lý trước cực gọn!",
-                "🔮 Quẻ Thuật toán: Trình độ giải quyết vấn đề đạt độ phức tạp O(1), nhìn đề là biết đáp án ngay lập tức!",
-                "🔮 Quẻ Đệ quy: Hạnh phúc sẽ gọi lại chính nó, nhân đôi niềm vui sau mỗi ngày Trò cố gắng!",
-                "🔮 Quẻ Robot: Trò sẽ vận hành cuộc sống chính xác, hiệu quả và luôn đi đúng quỹ đạo thành công!",
-                "🔮 Quẻ Phím tắt: Trò sẽ tìm được 'Shortcut' (đường tắt) thông minh nhất để chạm tay vào ước mơ!"
-            ];
-
-            document.getElementById('txtWish').innerText = wishList[Math.floor(Math.random() * wishList.length)];
-            document.getElementById('txtOracle').innerText = oracles[Math.floor(Math.random() * oracles.length)];
-        }
-
-        // --- Canvas Hoa Rơi ---
-        const canvas = document.getElementById('visualCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-
-        class Particle {
-            constructor() { this.reset(); this.y = Math.random() * canvas.height; }
-            reset() { this.x = Math.random() * canvas.width; this.y = -10; this.size = Math.random() * 5 + 3; this.speed = Math.random() * 1.5 + 0.5; }
-            draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = (currentCulture.id === 'vn' || currentCulture.id === 'cn') ? '#ffd700' : '#ffb7c5';
-                ctx.fill();
+            // Logic chống quét lặp lại: Bỏ qua nếu quét cùng 1 mã trong vòng 4 giây
+            if (decodedText === lastScannedText && (currentTime - lastScannedTime) < cooldownTime) {
+                return;
             }
-            update() { this.y += this.speed; if (this.y > canvas.height) this.reset(); }
+
+            // Lưu lại mã và thời gian vừa quét
+            lastScannedText = decodedText;
+            lastScannedTime = currentTime;
+
+            // Hiển thị trạng thái
+            const resultBox = document.getElementById('result-box');
+            resultBox.innerHTML = `<span class="loading">Đang ghi nhận:</span> ${decodedText}...`;
+
+            // Gửi dữ liệu tới Google Sheets thông qua POST
+            fetch(GAS_WEB_APP_URL, {
+                method: "POST",
+                mode: "no-cors", // Sử dụng no-cors để tránh lỗi CORS khi gọi từ HTML tĩnh
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8"
+                },
+                body: JSON.stringify({ qrText: decodedText })
+            })
+                .then(() => {
+                    // Do dùng no-cors nên không đọc được JSON response, nhưng fetch chạy thành công nghĩa là đã gửi đi
+                    resultBox.innerHTML = `<span class="success">✓ Thành công!</span><br>Đã lưu: ${decodedText}`;
+
+                    // Trả lại thông báo mặc định sau 2.5 giây
+                    setTimeout(() => {
+                        if (resultBox.innerText.includes('Thành công')) {
+                            resultBox.innerHTML = "Sẵn sàng quét mã tiếp theo...";
+                        }
+                    }, 2500);
+                })
+                .catch(error => {
+                    console.error('Lỗi khi gửi dữ liệu:', error);
+                    resultBox.innerHTML = `<span class="error">✗ Lỗi khi lưu dữ liệu! Hãy thử lại.</span>`;
+                });
         }
 
-        for (let i = 0; i < 40; i++) particles.push(new Particle());
-        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
-        animate();
+        function onScanFailure(error) {
+            // Các lỗi đọc khung hình liên tục sẽ bỏ qua ở đây để không làm gián đoạn
+            // console.warn(`Scan error = ${error}`);
+        }
+
+        // Cấu hình máy quét mã QR
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            {
+                fps: 10,  // Tốc độ quét 10 khung hình/giây
+                qrbox: { width: 250, height: 250 }, // Vùng focus vuông
+                aspectRatio: 1.0,
+                showTorchButtonIfSupported: true // Hiện nút bật đèn Flash nếu điện thoại hỗ trợ
+            },
+            false // verbose = false để ẩn log
+        );
+
+        // Khởi động Camera
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+        // Cập nhật trạng thái sau khi load
+        setTimeout(() => {
+            document.getElementById('result-box').innerHTML = "Hãy đưa mã QR vào khung hình camera.";
+        }, 2000);
+
     </script>
 </body>
 
