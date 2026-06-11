@@ -132,7 +132,7 @@
 </head>
 <body>
 
-    <div class="header">Hệ Thống Điểm Danh 5</div>
+    <div class="header">Hệ Thống Điểm Danh 6</div>
 
     <button id="start-btn" onclick="startCamera()">Bật Camera Quét Mã</button>
 
@@ -238,9 +238,9 @@
 
             const camWrapper = document.getElementById('camera-wrapper');
             camWrapper.classList.add('scan-success');
-            setTimeout(() => camWrapper.classList.remove('scan-success'), 800); 
+            setTimeout(() => camWrapper.classList.remove('scan-success'), 80); 
 
-            showToast(`🔍 Đang xử lý: <b>${decodedText}</b>...`, 'info', 2000);
+            showToast(`🔍 Đang xử lý: <b>${decodedText}</b>...`, 'info', 20);
             document.getElementById('status-card').innerHTML = `<span style="color: #007bff; font-weight: bold;">Đang gửi dữ liệu:</span> ${decodedText}`;
 
             const params = new URLSearchParams();
@@ -253,7 +253,7 @@
             .then(response => response.json()) 
             .then(data => {
                 if (data.status === "success") {
-                    showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, 'success', 4000);
+                    showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, 'success', 40);
                     document.getElementById('status-card').innerHTML = `<span style="color: #28a745; font-weight: bold;">Đã lưu thành công!</span> Sẵn sàng quét tiếp.`;
                 } else {
                     throw new Error(data.message || "Lỗi từ phía Server");
@@ -261,7 +261,7 @@
             })
             .catch(error => {
                 console.error("Lỗi Fetch:", error);
-                showToast(`❌ Lỗi gửi dữ liệu! Xem lại kết nối mạng.`, 'error', 4000);
+                showToast(`❌ Lỗi gửi dữ liệu! Xem lại kết nối mạng.`, 'error', 40);
                 document.getElementById('status-card').innerHTML = `<span style="color: #dc3545; font-weight: bold;">Lỗi kết nối.</span> Vui lòng quét lại.`;
                 lastScannedTime = 0; // Đặt lại để người dùng có thể thử quét ngay
             });
