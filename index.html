@@ -35,7 +35,7 @@
 </head>
 <body>
 
-    <div class="header">Hệ Thống Điểm Danh 10</div>
+    <div class="header">Hệ Thống Điểm Danh Nhan 1 </div>
 
     <button id="start-btn" class="btn btn-start" onclick="startCamera()">Bật Camera Quét Mã</button>
 
@@ -58,7 +58,7 @@
 
 <script>
     // --- 1. CẤU HÌNH ---
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwDMl7Z17LK_B3__JLY2h-GO7IZ9j1WOZW1x5WEBhMxkgHl7uxUd2J-Ge-D5MQGAs55/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyp7ygQrMSOi5gjg_pHBv0al6SVlmnstMvPTcjy2wJd7K6S0XhOtnDD_G4zv4P1gt1ouw/exec";
     
     // Mảng lưu trữ các mã QR đã quét (Lưu tạm ở RAM)
     let scannedCodes = [];
@@ -146,19 +146,17 @@
         requestAnimationFrame(tick);
     }
 
-function processQRCode(data) {
-    // 1. THÊM DÒNG NÀY: Nếu dữ liệu bị rỗng hoặc chỉ có khoảng trắng thì bỏ qua luôn
-    if (!data || data.trim() === "") return; 
+    function processQRCode(data) {
+        // CHỐNG TRÙNG: Kiểm tra xem mã này đã có trong mảng chưa
+        if (scannedCodes.includes(data)) {
+            return; // Nếu có rồi thì bỏ qua luôn, không làm gì cả
+        }
 
-    // 2. CHỐNG TRÙNG: Kiểm tra xem mã này đã có trong mảng chưa
-    if (scannedCodes.includes(data)) {
-        return; 
-    }
-
-    // Các đoạn code bên dưới giữ nguyên...
-    scannedCodes.push(data);
-    
-    const camWrapper = document.getElementById('camera-wrapper');
+        // Thêm vào mảng
+        scannedCodes.push(data);
+        
+        // Hiệu ứng chớp xanh
+        const camWrapper = document.getElementById('camera-wrapper');
         camWrapper.classList.add('scan-success');
         setTimeout(() => camWrapper.classList.remove('scan-success'), 100);
 
@@ -182,69 +180,36 @@ function processQRCode(data) {
         } catch(e) { console.log("Trình duyệt không hỗ trợ AudioContext"); }
     }
 
-// --- 4. GỬI DỮ LIỆU LÊN SERVER (ĐÃ TỐI ƯU & THÊM LOG DEBUG) ---
+    // --- 4. GỬI DỮ LIỆU LÊN SERVER ---
     function sendData() {
         if (scannedCodes.length === 0) return;
         
-        console.log("=== 🚀 BẮT ĐẦU QUÁ TRÌNH GỬI DỮ LIỆU ===");
-        console.log("1. Danh sách mã mộc đang có:", scannedCodes);
-
         const btn = document.getElementById('send-btn');
         btn.innerText = "Đang gửi...";
         btn.disabled = true;
 
-        // Đóng gói dữ liệu
-        const qrDataString = JSON.stringify(scannedCodes);
-        console.log("2. Chuỗi JSON đã đóng gói (Chuẩn bị gửi):", qrDataString);
-
+        // Đóng gói toàn bộ mảng thành chuỗi JSON
         const params = new URLSearchParams();
-        params.append("qrData", qrDataString);
-        console.log("3. Dữ liệu URLSearchParams:", params.toString());
+        params.append("qrData", JSON.stringify(scannedCodes)); 
 
-        console.log("4. Đang gọi Fetch (POST) đến URL:", GAS_WEB_APP_URL);
-        
         fetch(GAS_WEB_APP_URL, {
             method: "POST",
-            body: params,
-            redirect: "follow" // RẤT QUAN TRỌNG: Google Script luôn bắt chuyển hướng, thiếu dòng này sẽ lỗi CORS
+            body: params
         })
-        .then(res => {
-            console.log("5. Đã nhận phản hồi thô (Raw Response) từ Server:", res);
-            if (!res.ok) {
-                throw new Error(`HTTP Error: Mã lỗi ${res.status} - ${res.statusText}`);
-            }
-            // Đọc dữ liệu dạng text trước thay vì ép sang JSON ngay để dễ debug
-            return res.text(); 
-        })
-        .then(textData => {
-            console.log("6. Dữ liệu Text Server trả về:", textData);
-            
-            try {
-                // Thử chuyển Text thành JSON
-                const data = JSON.parse(textData);
-                console.log("7. Dữ liệu sau khi giải mã JSON thành công:", data);
-                
-                if (data.status === "success") {
-                    showToast(`✅ Đã lưu thành công ${data.count} mã!`);
-                    scannedCodes = []; // Làm rỗng mảng
-                    updateUI();
-                } else {
-                    // Nếu server báo có lỗi từ Apps Script
-                    console.error("❌ SERVER BÁO LỖI KỊCH BẢN:", data.message);
-                    throw new Error(data.message || "Lỗi không xác định từ Apps Script");
-                }
-            } catch (parseError) {
-                console.error("❌ LỖI GIẢI MÃ JSON (Khả năng URL App Script sai hoặc Web App trả về HTML):", parseError);
-                throw new Error("Dữ liệu trả về không hợp lệ. Hãy kiểm tra lại URL.");
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                showToast(`✅ Đã lưu thành công ${scannedCodes.length} mã!`);
+                scannedCodes = []; // Làm rỗng mảng sau khi gửi thành công
+                updateUI();
+            } else {
+                throw new Error("Lỗi Server");
             }
         })
         .catch(err => {
-            console.error("=== ❌ LỖI TRONG QUÁ TRÌNH GỬI ===");
-            console.error("Chi tiết lỗi:", err);
-            alert(`Lỗi: ${err.message}\n\nMở F12 (Console) để xem chi tiết.`);
+            alert("Lỗi kết nối mạng, gửi thất bại! Dữ liệu vẫn được giữ lại, bạn có thể thử gửi lại.");
         })
         .finally(() => {
-            console.log("=== 🏁 KẾT THÚC QUÁ TRÌNH GỬI ===");
             btn.innerText = "Gửi Dữ Liệu";
             btn.disabled = scannedCodes.length === 0;
         });
