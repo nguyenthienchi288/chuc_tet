@@ -3,309 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Điểm Danh QR</title>
+    <title>Điểm Danh QR Siêu Tốc</title>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <style>
-        :root {
-            --primary: #007bff;
-            --success: #28a745;
-            --bg: #f4f7f6;
-            --text: #333;
-        }
+        :root { --primary: #007bff; --success: #28a745; --danger: #dc3545; --bg: #f4f7f6; --text: #333; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; color: var(--text); padding-bottom: 20px;}
+        .header { width: 100%; background: #fff; padding: 15px 0; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: bold; font-size: 18px; position: sticky; top: 0; z-index: 100;}
+        
+        #camera-wrapper { position: relative; width: 95%; max-width: 500px; margin-top: 15px; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none;}
+        #camera-wrapper::after { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border: 6px solid transparent; pointer-events: none; transition: 0.2s; }
+        #camera-wrapper.scan-success::after { border-color: var(--success); box-shadow: inset 0 0 20px rgba(40,167,69,0.8); }
+        #video { width: 100%; display: block; object-fit: cover; }
+        
+        .dashboard { width: 95%; max-width: 500px; background: #fff; margin-top: 15px; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); box-sizing: border-box;}
+        .stat-box { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+        .stat-box h3 { margin: 0; color: var(--primary); }
+        .stat-box span { font-size: 24px; font-weight: bold; color: var(--success); }
+        
+        #scanned-list { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; font-size: 14px; }
+        #scanned-list li { padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;}
+        #scanned-list li:nth-child(odd) { background-color: #f9f9f9; }
+        
+        .btn { padding: 12px 20px; font-size: 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; color: white; transition: 0.2s;}
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-start { background: var(--primary); margin-top: 50px; width: 80%; border-radius: 25px; }
+        .btn-send { background: var(--success); }
+        .btn-clear { background: var(--danger); margin-top: 5px; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            color: var(--text);
-        }
-
-        .header {
-            width: 100%;
-            background: #fff;
-            padding: 15px 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            font-size: 18px;
-            font-weight: bold;
-            z-index: 10;
-        }
-
-        #camera-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin-top: 20px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            background: #000;
-        }
-
-        #camera-wrapper::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border: 6px solid transparent;
-            border-radius: 12px;
-            pointer-events: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            z-index: 10;
-        }
-
-        #camera-wrapper.scan-success::after {
-            border-color: var(--success);
-            box-shadow: inset 0 0 25px rgba(40, 167, 69, 0.8);
-        }
-
-        #video {
-            width: 100%;
-            display: block;
-            object-fit: cover;
-        }
-
-        #status-card {
-            margin-top: 20px;
-            background: #fff;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            width: 90%;
-            max-width: 460px;
-            text-align: center;
-            font-size: 15px;
-        }
-
-        #start-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 25px;
-            margin-top: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,123,255,0.3);
-        }
-
-        #toast-container {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 9999;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .toast {
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            animation: slideUp 0.3s ease forwards;
-            opacity: 0;
-        }
-
-        .toast.info { background-color: #17a2b8; }
-        .toast.success { background-color: var(--success); }
-        .toast.error { background-color: #dc3545; }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999;}
     </style>
 </head>
 <body>
 
-    <div class="header">Hệ Thống Điểm Danh 7</div>
+    <div class="header">Hệ Thống Điểm Danh Nhanh</div>
 
-    <button id="start-btn" onclick="startCamera()">Bật Camera Quét Mã</button>
+    <button id="start-btn" class="btn btn-start" onclick="startCamera()">Bật Camera Quét Mã</button>
 
-    <div id="camera-wrapper" style="display: none;">
+    <div id="camera-wrapper">
         <video id="video" playsinline></video>
         <canvas id="canvas" hidden></canvas>
     </div>
 
-    <div id="status-card">
-        Vui lòng bấm nút phía trên để cấp quyền và mở Camera.
+    <div class="dashboard" id="dashboard" style="display: none;">
+        <div class="stat-box">
+            <h3>Đã quét:</h3>
+            <span id="counter">0</span>
+        </div>
+        <ul id="scanned-list"></ul>
+        <button id="send-btn" class="btn btn-send" onclick="sendData()" disabled>Gửi Dữ Liệu</button>
+        <button class="btn btn-clear" onclick="clearData()">Xóa Danh Sách</button>
     </div>
 
-    <div id="toast-container"></div>
+    <div id="toast">Thông báo</div>
 
 <script>
-        // --- 1. CẤU HÌNH & BIẾN TOÀN CỤC ---
+    // --- 1. CẤU HÌNH ---
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyp7ygQrMSOi5gjg_pHBv0al6SVlmnstMvPTcjy2wJd7K6S0XhOtnDD_G4zv4P1gt1ouw/exec";
+    
+    // Mảng lưu trữ các mã QR đã quét (Lưu tạm ở RAM)
+    let scannedCodes = [];
+    
+    const video = document.getElementById("video");
+    const canvasElement = document.getElementById("canvas");
+    const canvas = canvasElement.getContext("2d", { willReadFrequently: true });
+    
+    let isCameraRunning = false;
+    let lastScanTime = 0;
 
-        // Đường dẫn đến Web App của Google Apps Script dùng để nhận dữ liệu
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyp7ygQrMSOi5gjg_pHBv0al6SVlmnstMvPTcjy2wJd7K6S0XhOtnDD_G4zv4P1gt1ouw/exec";
+    // --- 2. HÀM GIAO DIỆN ---
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.style.opacity = '1';
+        setTimeout(() => toast.style.opacity = '0', 2000);
+    }
 
-        // Các biến dùng để chống việc quét trùng lặp 1 mã liên tục
-        let lastScannedText = "";     // Lưu lại nội dung của mã QR vừa quét gần nhất
-        let lastScannedTime = 0;      // Lưu lại thời điểm (timestamp) của lần quét gần nhất
-        const cooldownTime = 2000;    // Thời gian chờ bắt buộc (4000ms = 4 giây) trước khi cho phép quét lại CÙNG MỘT mã QR
+    // Cập nhật giao diện đếm số và danh sách
+    function updateUI() {
+        document.getElementById('counter').innerText = scannedCodes.length;
+        const list = document.getElementById('scanned-list');
+        list.innerHTML = "";
+        
+        // Đảo ngược mảng để mã mới quét hiện lên trên cùng
+        [...scannedCodes].reverse().forEach((code, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${code}</span> <small>#${scannedCodes.length - index}</small>`;
+            list.appendChild(li);
+        });
 
-        // Các biến dùng để tối ưu hiệu năng (giảm tải CPU)
-        let lastScanTick = 0;         // Lưu lại thời điểm cuối cùng thuật toán nhận diện QR chạy
-        const SCAN_INTERVAL = 150;    // Chỉ cho phép thuật toán tìm QR chạy 150 mili-giây 1 lần (khoảng ~6.5 lần/giây) thay vì chạy liên tục
+        // Bật/tắt nút Gửi
+        document.getElementById('send-btn').disabled = scannedCodes.length === 0;
+    }
 
-        // --- 2. KẾT NỐI VỚI GIAO DIỆN (DOM) ---
-
-        // Lấy các phần tử HTML để thao tác
-        const video = document.getElementById("video");                 // Thẻ <video> dùng để hiển thị luồng hình ảnh từ camera
-        const canvasElement = document.getElementById("canvas");        // Thẻ <canvas> ẩn dùng để vẽ lại khung hình từ video để xử lý
-        // Lấy ngữ cảnh vẽ 2D của canvas. willReadFrequently: true báo cho trình duyệt biết canvas này sẽ bị đọc dữ liệu liên tục để tối ưu
-        const canvas = canvasElement ? canvasElement.getContext("2d", { willReadFrequently: true }) : null;
-
-
-        // --- 3. CÁC HÀM XỬ LÝ ---
-
-        // Hàm hiển thị thông báo nổi (Toast) trên màn hình
-        function showToast(message, type = 'info', duration = 3000) {
-            const container = document.getElementById('toast-container');
-            if (!container) return; // Nếu không tìm thấy chỗ chứa thông báo thì thoát hàm
-            
-            // Tạo một thẻ <div> mới để chứa nội dung thông báo
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`; // Thêm class (CSS) để định dạng màu sắc (thành công, lỗi, thông tin)
-            toast.innerHTML = message;         // Gắn nội dung chữ vào
-            container.appendChild(toast);      // Thêm thông báo vào màn hình
-
-            // Tự động làm mờ và xóa thông báo sau một khoảng thời gian (duration)
-            setTimeout(() => {
-                toast.style.opacity = '0'; // Hiệu ứng mờ dần
-                setTimeout(() => toast.remove(), 300); // Xóa hẳn phần tử khỏi HTML sau khi đã mờ hết
-            }, duration);
+    function clearData() {
+        if(confirm("Bạn có chắc muốn xóa toàn bộ danh sách chưa gửi?")) {
+            scannedCodes = [];
+            updateUI();
+            showToast("Đã xóa danh sách");
         }
+    }
 
-        // Hàm khởi động Camera
-        function startCamera() {
-            // Ẩn nút "Bắt đầu" và hiện khung chứa camera lên
-            document.getElementById('start-btn').style.display = 'none';
-            document.getElementById('camera-wrapper').style.display = 'block';
-            document.getElementById('status-card').innerText = "Đang khởi động Camera...";
-
-            // Yêu cầu trình duyệt cấp quyền truy cập camera, ưu tiên camera sau (environment)
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                .then(function(stream) {
-                    // Nếu người dùng cho phép, đưa luồng video vào thẻ <video>
-                    video.srcObject = stream;
-                    video.setAttribute("playsinline", true); // Cần thiết để video chạy trực tiếp trên iOS mà không bị phóng to toàn màn hình
-                    video.play(); // Bắt đầu phát video
-                    
-                    // Gọi hàm tick() để bắt đầu vòng lặp xử lý hình ảnh
-                    requestAnimationFrame(tick);
-                    document.getElementById('status-card').innerText = "Sẵn sàng! Hãy đưa mã QR vào khung.";
-                })
-                .catch(function(err) {
-                    // Xử lý nếu người dùng từ chối quyền hoặc máy không có camera
-                    console.error("Lỗi Camera:", err);
-                    document.getElementById('status-card').innerText = "Lỗi: Không thể truy cập Camera. Vui lòng kiểm tra quyền.";
-                    document.getElementById('start-btn').style.display = 'block'; // Hiện lại nút bắt đầu
-                });
-        }
-
-        // Hàm vòng lặp phân tích hình ảnh (chạy liên tục khi camera mở)
-        function tick() {
-            // Kiểm tra xem video đã tải đủ dữ liệu để hiển thị chưa
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                // Điều chỉnh kích thước canvas cho khớp với độ phân giải thực của video
-                canvasElement.hidden = false;
-                canvasElement.height = video.videoHeight;
-                canvasElement.width = video.videoWidth;
+    // --- 3. XỬ LÝ CAMERA & QUÉT MÃ ---
+    function startCamera() {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(stream => {
+                video.srcObject = stream;
+                video.setAttribute("playsinline", true);
+                video.play();
+                isCameraRunning = true;
                 
-                // Vẽ khung hình hiện tại từ thẻ <video> lên thẻ <canvas>
-                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                document.getElementById('start-btn').style.display = 'none';
+                document.getElementById('camera-wrapper').style.display = 'block';
+                document.getElementById('dashboard').style.display = 'block';
                 
-                // TỐI ƯU THUẬT TOÁN: Lấy thời gian hiện tại
-                let currentTime = new Date().getTime();
-                // Chỉ chạy thuật toán quét mã nếu khoảng thời gian từ lần quét trước lớn hơn SCAN_INTERVAL (150ms)
-                if (currentTime - lastScanTick >= SCAN_INTERVAL) {
-                    lastScanTick = currentTime; // Cập nhật lại mốc thời gian quét
-                    
-                    // Trích xuất dữ liệu điểm ảnh (pixel) từ canvas
-                    var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-                    
-                    // Dùng thư viện jsQR để tìm và giải mã QR từ đống dữ liệu điểm ảnh đó
-                    var code = jsQR(imageData.data, imageData.width, imageData.height, {
-                        inversionAttempts: "dontInvert", // Không cố gắng đảo ngược màu ảnh để tiết kiệm CPU
-                    });
-
-                    // Nếu tìm thấy mã QR (biến code không bị rỗng)
-                    if (code) {
-                        onScanSuccess(code.data); // Chuyển dữ liệu chữ lấy được sang hàm xử lý thành công
-                    }
-                }
-            }
-            // Gọi lại chính hàm này cho khung hình tiếp theo (tạo thành vòng lặp vô tận trôi chảy)
-            requestAnimationFrame(tick);
-        }
-
-        // Hàm xử lý khi quét được một mã QR hợp lệ
-        function onScanSuccess(decodedText) {
-            const currentTime = new Date().getTime();
-
-            // Chống spam: Nếu mã vừa quét giống y hệt mã trước đó VÀ chưa qua hết thời gian chờ (cooldownTime) thì ngưng hàm ngay, không làm gì cả
-            if (decodedText === lastScannedText && (currentTime - lastScannedTime) < cooldownTime) {
-                return;
-            }
-
-            // Ghi nhận lại mã và thời gian của lần quét này
-            lastScannedText = decodedText;
-            lastScannedTime = currentTime;
-
-            // Tạo hiệu ứng nháy sáng (chớp xanh) trên giao diện để báo hiệu quét thành công
-            const camWrapper = document.getElementById('camera-wrapper');
-            camWrapper.classList.add('scan-success');
-            setTimeout(() => camWrapper.classList.remove('scan-success'), 80); // Xóa hiệu ứng sau 80ms
-
-            // Cập nhật giao diện: Hiện thông báo nổi và đổi chữ trên thẻ trạng thái
-            showToast(`🔍 Đang xử lý: <b>${decodedText}</b>...`, 'info', 1000); // (Lưu ý: 20ms là rất nhanh, nên đổi thành 2000)
-            document.getElementById('status-card').innerHTML = `<span style="color: #007bff; font-weight: bold;">Đang gửi dữ liệu:</span> ${decodedText}`;
-
-            // Chuẩn bị dữ liệu để gửi đi dưới dạng form-data
-            const params = new URLSearchParams();
-            params.append("qrText", decodedText); // Gắn nội dung QR vào biến "qrText" để server hiểu
-
-            // Gửi dữ liệu sang Google Sheets (thông qua Web App URL) bằng phương thức POST
-            fetch(GAS_WEB_APP_URL, {
-                method: "POST",
-                body: params
+                requestAnimationFrame(tick);
+                showToast("Camera đã sẵn sàng!");
             })
-            .then(response => response.json()) // Chờ server trả lời và chuyển câu trả lời thành định dạng JSON
-            .then(data => {
-                // Kiểm tra xem server có báo lưu thành công không
-                if (data.status === "success") {
-                    showToast(`✅ Đã lưu Sheet: <b>${decodedText}</b>`, 'success', 1000); // (Lưu ý: 40ms là rất nhanh, nên đổi thành 4000)
-                    document.getElementById('status-card').innerHTML = `<span style="color: #28a745; font-weight: bold;">Đã lưu thành công!</span> Sẵn sàng quét tiếp.`;
-                } else {
-                    // Nếu server báo lỗi (ví dụ file sheet bị xóa, khóa...), ném ra lỗi để nhảy xuống phần .catch
-                    throw new Error(data.message || "Lỗi từ phía Server");
-                }
-            })
-            .catch(error => {
-                // Xử lý khi có lỗi (như mất mạng internet, server lỗi, v.v.)
-                console.error("Lỗi Fetch:", error);
-                showToast(`❌ Lỗi gửi dữ liệu! Xem lại kết nối mạng.`, 'error', 1000);
-                document.getElementById('status-card').innerHTML = `<span style="color: #dc3545; font-weight: bold;">Lỗi kết nối.</span> Vui lòng quét lại.`;
-                
-                // Đặt lại thời gian thành 0 để người dùng không phải chờ hết cooldownTime, có thể thử quét lại ngay lập tức
-                lastScannedTime = 0; 
+            .catch(err => {
+                alert("Lỗi truy cập Camera. Vui lòng cấp quyền!");
             });
+    }
+
+    function tick() {
+        if (!isCameraRunning) return;
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            canvasElement.height = video.videoHeight;
+            canvasElement.width = video.videoWidth;
+            canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+            
+            // Giảm độ trễ quét xuống 50ms (rất nhạy)
+            let now = Date.now();
+            if (now - lastScanTime > 50) {
+                lastScanTime = now;
+                var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                var code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+
+                if (code) {
+                    processQRCode(code.data);
+                }
+            }
         }
+        requestAnimationFrame(tick);
+    }
+
+    function processQRCode(data) {
+        // CHỐNG TRÙNG: Kiểm tra xem mã này đã có trong mảng chưa
+        if (scannedCodes.includes(data)) {
+            return; // Nếu có rồi thì bỏ qua luôn, không làm gì cả
+        }
+
+        // Thêm vào mảng
+        scannedCodes.push(data);
+        
+        // Hiệu ứng chớp xanh
+        const camWrapper = document.getElementById('camera-wrapper');
+        camWrapper.classList.add('scan-success');
+        setTimeout(() => camWrapper.classList.remove('scan-success'), 100);
+
+        // Phát âm thanh bíp ngắn (Dùng Web Audio API để không bị lỗi trên iOS)
+        beep();
+
+        // Cập nhật giao diện
+        updateUI();
+    }
+
+    // Hàm tạo tiếng "Bíp" khi quét thành công
+    function beep() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.value = 800; // Tần số âm thanh
+            osc.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.1); // Kêu trong 0.1 giây
+        } catch(e) { console.log("Trình duyệt không hỗ trợ AudioContext"); }
+    }
+
+    // --- 4. GỬI DỮ LIỆU LÊN SERVER ---
+    function sendData() {
+        if (scannedCodes.length === 0) return;
+        
+        const btn = document.getElementById('send-btn');
+        btn.innerText = "Đang gửi...";
+        btn.disabled = true;
+
+        // Đóng gói toàn bộ mảng thành chuỗi JSON
+        const params = new URLSearchParams();
+        params.append("qrData", JSON.stringify(scannedCodes)); 
+
+        fetch(GAS_WEB_APP_URL, {
+            method: "POST",
+            body: params
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                showToast(`✅ Đã lưu thành công ${scannedCodes.length} mã!`);
+                scannedCodes = []; // Làm rỗng mảng sau khi gửi thành công
+                updateUI();
+            } else {
+                throw new Error("Lỗi Server");
+            }
+        })
+        .catch(err => {
+            alert("Lỗi kết nối mạng, gửi thất bại! Dữ liệu vẫn được giữ lại, bạn có thể thử gửi lại.");
+        })
+        .finally(() => {
+            btn.innerText = "Gửi Dữ Liệu";
+            btn.disabled = scannedCodes.length === 0;
+        });
+    }
 </script>
 </body>
 </html>
