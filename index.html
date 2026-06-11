@@ -181,6 +181,7 @@
     }
 
    // --- 4. GỬI DỮ LIỆU LÊN SERVER ---
+// --- 4. GỬI DỮ LIỆU LÊN SERVER ---
 function sendData() {
     if (scannedCodes.length === 0) return;
     
@@ -188,27 +189,28 @@ function sendData() {
     btn.innerText = "Đang gửi...";
     btn.disabled = true;
 
-    // Đóng gói dữ liệu bằng URLSearchParams (Cách an toàn nhất cho Google Apps Script)
-    const params = new URLSearchParams();
-    params.append("qrData", JSON.stringify(scannedCodes));
+    // Ép mảng thẳng thành chuỗi JSON, không dùng URLSearchParams nữa
+    const rawJSON = JSON.stringify(scannedCodes);
 
     fetch(GAS_WEB_APP_URL, {
         method: "POST",
-        body: params
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: rawJSON
     })
     .then(res => res.json())
     .then(data => {
         if (data.status === "success") {
             showToast(`✅ Đã lưu thành công ${data.count} mã!`);
-            scannedCodes = []; // Làm rỗng mảng sau khi gửi
+            scannedCodes = []; 
             updateUI();
         } else {
-            // Hiển thị lỗi rõ ràng nếu có
-            alert("LỖI TỪ SERVER:\n" + data.message + "\n\nDữ liệu server nhận được: " + data.rawReceived);
+            alert("LỖI TỪ SERVER:\n" + data.message + "\n\nDữ liệu gửi lên: " + data.rawReceived);
         }
     })
     .catch(err => {
-        alert("Lỗi kết nối mạng hoặc lỗi CORS! Hãy kiểm tra lại link Web App.");
+        alert("Lỗi kết nối mạng! Không thể gửi dữ liệu.");
         console.error(err);
     })
     .finally(() => {
