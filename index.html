@@ -35,7 +35,7 @@
 </head>
 <body>
 
-    <div class="header">Hệ Thống Điểm Danh Nhan 1 </div>
+    <div class="header">Hệ Thống Điểm Danh Nhan 2 </div>
 
     <button id="start-btn" class="btn btn-start" onclick="startCamera()">Bật Camera Quét Mã</button>
 
@@ -181,39 +181,53 @@
     }
 
     // --- 4. GỬI DỮ LIỆU LÊN SERVER ---
-    function sendData() {
-        if (scannedCodes.length === 0) return;
-        
-        const btn = document.getElementById('send-btn');
-        btn.innerText = "Đang gửi...";
-        btn.disabled = true;
+    // --- 4. GỬI DỮ LIỆU LÊN SERVER ---
+function sendData() {
+    if (scannedCodes.length === 0) return;
+    
+    const btn = document.getElementById('send-btn');
+    btn.innerText = "Đang gửi...";
+    btn.disabled = true;
 
-        // Đóng gói toàn bộ mảng thành chuỗi JSON
-        const params = new URLSearchParams();
-        params.append("qrData", JSON.stringify(scannedCodes)); 
+    // Đóng gói dữ liệu thành JSON object
+    const payload = JSON.stringify({ qrData: scannedCodes });
+    
+    // LOG 1: Dữ liệu Frontend chuẩn bị gửi đi
+    console.log("📤 [CLIENT GỬI] Dữ liệu payload:", payload);
 
-        fetch(GAS_WEB_APP_URL, {
-            method: "POST",
-            body: params
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === "success") {
-                showToast(`✅ Đã lưu thành công ${scannedCodes.length} mã!`);
-                scannedCodes = []; // Làm rỗng mảng sau khi gửi thành công
-                updateUI();
-            } else {
-                throw new Error("Lỗi Server");
-            }
-        })
-        .catch(err => {
-            alert("Lỗi kết nối mạng, gửi thất bại! Dữ liệu vẫn được giữ lại, bạn có thể thử gửi lại.");
-        })
-        .finally(() => {
-            btn.innerText = "Gửi Dữ Liệu";
-            btn.disabled = scannedCodes.length === 0;
-        });
-    }
+    fetch(GAS_WEB_APP_URL, {
+        method: "POST",
+        headers: {
+            // Sử dụng text/plain để tránh bị trình duyệt chặn CORS Preflight (lỗi OPTIONS)
+            "Content-Type": "text/plain;charset=utf-8" 
+        },
+        body: payload,
+        redirect: "follow" // BẮT BUỘC: Để trình duyệt đi theo redirect 302 của Google
+    })
+    .then(res => res.json())
+    .then(data => {
+        // LOG 2: Dữ liệu Frontend nhận về từ Server
+        console.log("📥 [CLIENT NHẬN] Phản hồi từ Server:", data);
+
+        if (data.status === "success") {
+            showToast(`✅ Đã lưu thành công ${data.count} mã!`);
+            scannedCodes = []; // Làm rỗng mảng sau khi gửi thành công
+            updateUI();
+        } else {
+            console.error("❌ [CLIENT NHẬN LỖI]:", data.message);
+            alert("Lỗi Server: " + data.message + "\n\nChi tiết: " + data.rawReceived);
+        }
+    })
+    .catch(err => {
+        // LOG 3: Lỗi mạng hoặc lỗi không parse được JSON
+        console.error("❌ [LỖI FETCH]:", err);
+        alert("Lỗi kết nối mạng, gửi thất bại! Vui lòng mở F12 xem Console để biết chi tiết.");
+    })
+    .finally(() => {
+        btn.innerText = "Gửi Dữ Liệu";
+        btn.disabled = scannedCodes.length === 0;
+    });
+}
 </script>
 </body>
 </html>
